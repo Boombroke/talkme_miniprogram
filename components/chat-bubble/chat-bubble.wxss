@@ -1,6 +1,7 @@
 /* Chat Bubble - Modern Aesthetic */
 
 .bubble-wrapper {
+  position: relative;
   display: flex;
   margin-bottom: 40rpx;
   padding: 0 32rpx;
@@ -67,6 +68,80 @@
 
 .bubble-left-body {
   align-items: flex-start;
+}
+
+/* Long-press menu */
+.chat-menu-mask {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 20;
+  background: transparent;
+}
+
+.bubble-menu {
+  position: absolute;
+  top: -76rpx;
+  z-index: 21;
+  display: flex;
+  align-items: center;
+  height: 64rpx;
+  background: rgba(34, 34, 34, 0.96);
+  border-radius: 12rpx;
+  box-shadow: 0 8rpx 28rpx rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.bubble-menu::after {
+  content: '';
+  position: absolute;
+  bottom: -10rpx;
+  width: 0;
+  height: 0;
+  border-left: 10rpx solid transparent;
+  border-right: 10rpx solid transparent;
+  border-top: 10rpx solid rgba(34, 34, 34, 0.96);
+}
+
+.bubble-menu-ai {
+  left: 0;
+}
+
+.bubble-menu-ai::after {
+  left: 34rpx;
+}
+
+.bubble-menu-user {
+  right: 0;
+}
+
+.bubble-menu-user::after {
+  right: 34rpx;
+}
+
+.bubble-menu-item {
+  position: relative;
+  padding: 0 22rpx;
+  color: #FFFFFF;
+  font-size: 24rpx;
+  line-height: 64rpx;
+}
+
+.bubble-menu-item + .bubble-menu-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18rpx;
+  width: 1rpx;
+  height: 28rpx;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.bubble-menu-item:active {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 /* Bubble */

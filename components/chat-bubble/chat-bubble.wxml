@@ -1,10 +1,18 @@
-<view class="bubble-wrapper {{role === 'user' ? 'bubble-right' : 'bubble-left'}}">
+<view class="bubble-wrapper {{role === 'user' ? 'bubble-right' : 'bubble-left'}}" bindtap="closeMenu">
+  <view class="chat-menu-mask" wx:if="{{showMenu}}" catchtap="closeMenu"></view>
   <!-- AI Avatar -->
   <view class="avatar ai-avatar" wx:if="{{role === 'assistant'}}">
     <text class="avatar-text">{{aiAvatarEmoji || '🤖'}}</text>
   </view>
 
   <view class="bubble-body {{role === 'user' ? 'bubble-right-body' : 'bubble-left-body'}}">
+    <view class="bubble-menu {{role === 'user' ? 'bubble-menu-user' : 'bubble-menu-ai'}}" wx:if="{{showMenu}}" catchtap="onMenuTap">
+      <view class="bubble-menu-item" wx:if="{{role === 'assistant'}}" catchtap="onMenuTranslate">转中文</view>
+      <view class="bubble-menu-item" wx:if="{{role === 'assistant'}}" catchtap="onMenuTTS">播放</view>
+      <view class="bubble-menu-item" wx:if="{{role === 'assistant'}}" catchtap="onMenuCollect">收藏</view>
+      <view class="bubble-menu-item" catchtap="onMenuCopy">复制</view>
+    </view>
+
     <!-- VOICE MESSAGE BRANCH -->
     <block wx:if="{{type === 'voice'}}">
       <view class="voice-row {{role === 'user' ? 'voice-row-user' : 'voice-row-ai'}}">
@@ -37,7 +45,7 @@
           </block>
         </view>
 
-        <view class="voice-actions" wx:if="{{!isTyping}}">
+        <view class="voice-actions" wx:if="{{!isTyping && role !== 'assistant'}}">
           <view class="voice-action-btn" bindtap="onTapTranscript">
             <text class="voice-action-icon">📝</text>
             <text class="voice-action-label">{{showTranscript ? '收起' : '转文字'}}</text>
@@ -79,25 +87,8 @@
         <text class="bubble-content" wx:if="{{!isTyping}}">{{displayContent || content}}</text>
         <view class="bubble-cursor" wx:if="{{!isTyping && isStreaming && displayContent.length < content.length}}">|</view>
 
-        <!-- Audio play button for AI messages (hidden during streaming) -->
-        <view class="bubble-footer" wx:if="{{role === 'assistant' && content && !isStreaming}}" bindtap="onTapTTS">
-          <view class="audio-btn {{isPlaying ? 'is-playing' : ''}}">
-            <view wx:if="{{isLoading}}" class="loading-pulse">
-              <text class="dot">.</text><text class="dot">.</text><text class="dot">.</text>
-            </view>
-            <block wx:else>
-              <text class="audio-icon">🔊</text>
-              <text class="audio-text" wx:if="{{audioLabel}}">{{audioLabel}}</text>
-            </block>
-          </view>
-        </view>
-
-        <!-- Translation button for AI messages -->
-        <view class="translate-section" wx:if="{{role === 'assistant' && content && !isStreaming}}">
-          <view class="translate-btn" bindtap="onTapTranslate">
-            <text class="translate-icon">🌐</text>
-            <text class="translate-label">{{translating ? '翻译中...' : (showTranslation ? '收起' : '翻译')}}</text>
-          </view>
+        <!-- Translation result for AI messages; actions live in the long-press menu -->
+        <view class="translate-section" wx:if="{{role === 'assistant' && showTranslation && translatedText}}">
           <view class="translate-content" wx:if="{{showTranslation && translatedText}}">
             <text class="translate-text">{{translatedText}}</text>
           </view>

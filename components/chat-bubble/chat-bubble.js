@@ -79,7 +79,8 @@ Component({
     // Voice state
     isVoicePlaying: false,
     showTranscript: false,
-    voiceWidth: 160
+    voiceWidth: 160,
+    showMenu: false
   },
 
   observers: {
@@ -159,20 +160,42 @@ Component({
     },
 
     onLongPress() {
-      wx.showActionSheet({
-        itemList: ['收藏这条消息', '复制文本'],
-        success: (res) => {
-          if (res.tapIndex === 0) {
-            this.triggerEvent('collect', {
-              content: this.properties.content,
-              role: this.properties.role,
-              msgId: this.properties.msgId
-            });
-          } else if (res.tapIndex === 1) {
-            wx.setClipboardData({ data: this.properties.content });
-          }
-        }
+      if (this.properties.isTyping || this.properties.isStreaming || !this.properties.content) {
+        return;
+      }
+      this.setData({ showMenu: true });
+    },
+
+    closeMenu() {
+      if (this.data.showMenu) {
+        this.setData({ showMenu: false });
+      }
+    },
+
+    onMenuTap() {},
+
+    onMenuTTS() {
+      this.closeMenu();
+      this.onTapTTS();
+    },
+
+    onMenuTranslate() {
+      this.closeMenu();
+      this.onTapTranslate();
+    },
+
+    onMenuCollect() {
+      this.closeMenu();
+      this.triggerEvent('collect', {
+        content: this.properties.content,
+        role: this.properties.role,
+        msgId: this.properties.msgId
       });
+    },
+
+    onMenuCopy() {
+      this.closeMenu();
+      wx.setClipboardData({ data: this.properties.content || '' });
     },
 
     onTapTranslate() {
