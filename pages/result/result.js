@@ -1,5 +1,6 @@
 const { showToast } = require('../../utils/util');
 const api = require('../../utils/api');
+const auth = require('../../utils/auth');
 
 Page({
   data: {
@@ -68,6 +69,28 @@ Page({
     const text = e.currentTarget.dataset.text;
     if (!text) return;
     this._playAudioForText(text);
+  },
+
+  async collectFeedback(e) {
+    const content = e.currentTarget.dataset.text;
+    if (!content) return;
+    if (auth.requireAuth('收藏句子') !== 'allowed') return;
+
+    try {
+      await wx.cloud.callFunction({
+        name: 'login',
+        data: {
+          action: 'addCollection',
+          content,
+          role: 'assistant',
+          source: 'Practice Feedback'
+        }
+      });
+      showToast('收藏成功');
+    } catch (err) {
+      console.error('收藏失败:', err);
+      showToast('收藏失败');
+    }
   },
 
   async replayCorrection() {

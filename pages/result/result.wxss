@@ -196,6 +196,31 @@
   z-index: 2;
 }
 
+.collect-btn {
+  width: 64rpx;
+  height: 64rpx;
+  border-radius: 32rpx;
+  background: rgba(255, 159, 67, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 12rpx;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.collect-btn:active {
+  transform: scale(0.9);
+  background: rgba(255, 159, 67, 0.24);
+}
+
+.collect-icon {
+  color: #FF9F43;
+  font-size: 38rpx;
+  font-weight: 800;
+  line-height: 1;
+}
+
 .spinner {
   position: absolute;
   top: -4rpx;

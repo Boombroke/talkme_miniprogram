@@ -56,6 +56,9 @@
           <text class="play-icon">🔊</text>
           <view class="spinner" wx:if="{{playingText === correctedSentence}}"></view>
         </view>
+        <view class="collect-btn" data-text="{{correctedSentence}}" bind:tap="collectFeedback">
+          <text class="collect-icon">☆</text>
+        </view>
       </view>
       <view class="correction-card">
         <text class="correction-text">{{correctedSentence}}</text>
@@ -77,6 +80,9 @@
           <view class="play-btn {{playingText === item ? 'playing' : ''}}" data-text="{{item}}" bind:tap="playText">
             <text class="play-icon">🔊</text>
             <view class="spinner" wx:if="{{playingText === item}}"></view>
+          </view>
+          <view class="collect-btn" data-text="{{item}}" bind:tap="collectFeedback">
+            <text class="collect-icon">☆</text>
           </view>
         </view>
       </view>
