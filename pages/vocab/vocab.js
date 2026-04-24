@@ -69,7 +69,15 @@ Page({
     else if (diff === 'advanced') words = pool.advanced;
 
     const shuffled = words.sort(() => Math.random() - 0.5).slice(0, this.data.totalWords);
-    this.setData({ words: shuffled, currentWord: shuffled[0], currentIndex: 0 });
+    this.setData({
+      words: shuffled,
+      currentWord: shuffled[0],
+      currentIndex: 0,
+      showMeaning: false,
+      userSentence: '',
+      canSubmitSentence: false,
+      feedback: null
+    });
   },
 
   toggleMeaning() {
@@ -140,7 +148,16 @@ Page({
   },
 
   tryAgain() {
-    this.setData({ results: [], currentIndex: 0, showMeaning: false, stage: 'card' });
+    this.setData({
+      results: [],
+      currentIndex: 0,
+      showMeaning: false,
+      userSentence: '',
+      canSubmitSentence: false,
+      feedback: null,
+      correctCount: 0,
+      stage: 'card'
+    });
     this.loadWords();
   },
 
