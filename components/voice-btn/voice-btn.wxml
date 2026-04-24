@@ -1,0 +1,25 @@
+<view class="voice-btn-container">
+  <view
+    class="voice-btn {{isRecording ? 'recording' : ''}} {{disabled ? 'disabled' : ''}}"
+    catchtouchstart="onTouchStart"
+    catchtouchend="onTouchEnd"
+    catchtouchcancel="onTouchCancel"
+  >
+    <!-- Background pulse ring for recording state -->
+    <view class="recording-ring" wx:if="{{isRecording}}"></view>
+
+    <view class="btn-content" wx:if="{{!isRecording}}">
+      <text class="btn-icon">🎤</text>
+      <text class="btn-text">按住说话</text>
+    </view>
+    <view class="btn-content recording-content" wx:else>
+      <view class="recording-glow"></view>
+      <text class="btn-icon">🎙️</text>
+      <text class="btn-text recording-text">松开结束 {{recordTime}}s</text>
+      <!-- Waveform visualization -->
+      <view class="waveform" wx:if="{{isRecording}}">
+        <view class="wave-bar" wx:for="{{waveData}}" wx:key="index" style="height: {{item * 40 + 10}}rpx;"></view>
+      </view>
+    </view>
+  </view>
+</view>

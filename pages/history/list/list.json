@@ -1,0 +1,12 @@
+{
+  "usingComponents": {
+    "van-sticky": "../../../miniprogram_npm/@vant/weapp/sticky/index",
+    "van-search": "../../../miniprogram_npm/@vant/weapp/search/index",
+    "van-cell": "../../../miniprogram_npm/@vant/weapp/cell/index",
+    "van-tag": "../../../miniprogram_npm/@vant/weapp/tag/index",
+    "van-empty": "../../../miniprogram_npm/@vant/weapp/empty/index",
+    "van-loading": "../../../miniprogram_npm/@vant/weapp/loading/index",
+    "van-divider": "../../../miniprogram_npm/@vant/weapp/divider/index"
+  },
+  "navigationBarTitleText": "练习记录"
+}

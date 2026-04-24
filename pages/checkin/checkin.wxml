@@ -1,0 +1,139 @@
+<view class="checkin-page animate-fade-in-up">
+  <nav-bar title="每日打卡" show-back="{{false}}" />
+  <!-- Section 1: Streak Banner + Check-in -->
+  <view class="streak-row stagger-1">
+    <view class="streak-info">
+      <text class="streak-fire" style="font-size:{{streakFlame.size}}rpx;">{{streakFlame.emoji}}</text>
+      <view class="streak-nums">
+        <text class="streak-big">{{consecutiveDays}}</text>
+        <text class="streak-unit">天连击</text>
+      </view>
+      <view class="streak-divider-dot">·</view>
+      <text class="total-fire" style="font-size:{{totalFlame.size}}rpx;">{{totalFlame.emoji}}</text>
+      <view class="streak-total">
+        <text class="total-num">{{totalDays}}</text>
+        <text class="total-unit">天累计</text>
+      </view>
+    </view>
+    <view class="checkin-btn-compact {{isCheckedIn ? 'checked' : ''}} {{isLoading ? 'loading' : ''}}" bindtap="doCheckin">
+      <text wx:if="{{!isCheckedIn}}">签到</text>
+      <text wx:else>✅</text>
+    </view>
+  </view>
+
+  <!-- Section 2: Today's Stats Card -->
+  <view class="today-section stagger-2">
+    <view class="summary-card">
+      <view class="summary-item">
+        <text class="summary-value text-coral">{{todayPractice.count}}</text>
+        <text class="summary-label">Sessions</text>
+      </view>
+      <view class="summary-divider"></view>
+      <view class="summary-item">
+        <text class="summary-value text-orange">{{todayPractice.time}}</text>
+        <text class="summary-label">Minutes</text>
+      </view>
+      <view class="summary-divider"></view>
+      <view class="summary-item">
+        <text class="summary-value text-teal">{{todayPractice.score || '--'}}</text>
+        <text class="summary-label">Avg Score</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Section 3: Learning Data Dashboard -->
+  <view class="insights-section stagger-3">
+    <view class="insights-header">
+      <text class="insights-title">📊 学习数据</text>
+    </view>
+
+    <!-- Mode filter tabs -->
+    <scroll-view scroll-x class="mode-filter" enhanced show-scrollbar="{{false}}">
+      <view class="mode-filter-inner">
+        <view class="mode-tab {{statsFilter === 'all' ? 'active' : ''}}" data-mode="all" bindtap="onStatsFilter">全部</view>
+        <view class="mode-tab {{statsFilter === 'shadow' ? 'active' : ''}}" data-mode="shadow" bindtap="onStatsFilter">🔁 跟读</view>
+        <view class="mode-tab {{statsFilter === 'chat' ? 'active' : ''}}" data-mode="chat" bindtap="onStatsFilter">💬 对话</view>
+        <view class="mode-tab {{statsFilter === 'scene' ? 'active' : ''}}" data-mode="scene" bindtap="onStatsFilter">☕ 场景</view>
+        <view class="mode-tab {{statsFilter === 'topic' ? 'active' : ''}}" data-mode="topic" bindtap="onStatsFilter">🎯 话题</view>
+        <view class="mode-tab {{statsFilter === 'grammar' ? 'active' : ''}}" data-mode="grammar" bindtap="onStatsFilter">📝 语法</view>
+        <view class="mode-tab {{statsFilter === 'vocab' ? 'active' : ''}}" data-mode="vocab" bindtap="onStatsFilter">🎲 词汇</view>
+      </view>
+    </scroll-view>
+
+    <!-- Stats display: all modes overview -->
+    <view class="insights-grid" wx:if="{{statsFilter === 'all'}}">
+      <view class="insight-card">
+        <text class="insight-value text-coral">{{statsTotal}}</text>
+        <text class="insight-label">总练习次数</text>
+      </view>
+      <view class="insight-card">
+        <text class="insight-value text-orange">{{modeStats.shadow || 0}}</text>
+        <text class="insight-label">影子跟读</text>
+      </view>
+      <view class="insight-card">
+        <text class="insight-value text-teal">{{modeStats.chat || 0}}</text>
+        <text class="insight-label">自由对话</text>
+      </view>
+      <view class="insight-card">
+        <text class="insight-value" style="color: #FECA57">{{modeStats.scene || 0}}</text>
+        <text class="insight-label">情景实战</text>
+      </view>
+      <view class="insight-card">
+        <text class="insight-value text-coral">{{modeStats.topic || 0}}</text>
+        <text class="insight-label">话题挑战</text>
+      </view>
+      <view class="insight-card">
+        <text class="insight-value text-orange">{{modeStats.grammar || 0}}</text>
+        <text class="insight-label">语法专练</text>
+      </view>
+    </view>
+
+    <!-- Stats display: single mode detail -->
+    <view class="mode-detail-card" wx:else>
+      <view class="mode-detail-row">
+        <text class="mode-detail-emoji">{{statsFilterEmoji}}</text>
+        <view class="mode-detail-info">
+          <text class="mode-detail-name">{{statsFilterName}}</text>
+          <text class="mode-detail-count">已练习 <text class="mode-detail-num">{{statsFilterCount}}</text> 次</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Section 4: Leaderboard -->
+  <view class="leaderboard-section stagger-4">
+    <view class="leaderboard-header">
+      <text class="leaderboard-title">🏆 今日排行</text>
+    </view>
+    <view class="leaderboard-list" wx:if="{{leaderboard.length}}">
+      <view class="leader-item {{item.isMe ? 'is-me' : ''}}" wx:for="{{leaderboard}}" wx:key="rank">
+        <text class="leader-rank {{item.rank === 1 ? 'top-1' : (item.rank === 2 ? 'top-2' : (item.rank === 3 ? 'top-3' : ''))}}">
+          {{item.rank === 1 ? '🥇' : (item.rank === 2 ? '🥈' : (item.rank === 3 ? '🥉' : item.rank))}}
+        </text>
+        <text class="leader-name">{{item.nickName}}</text>
+        <text class="leader-score">{{item.score}}分</text>
+      </view>
+    </view>
+    <view class="leaderboard-empty" wx:else>
+      <text>今日暂无排行数据</text>
+    </view>
+  </view>
+
+  <!-- Section 5: Calendar -->
+  <view class="calendar-section stagger-5">
+    <view class="calendar-header">
+      <text class="calendar-title">📅 打卡日历</text>
+    </view>
+    <view class="calendar-wrapper">
+      <calendar checkinDates="{{checkinDates}}" bindmonthchange="onMonthChange" />
+    </view>
+  </view>
+
+  <!-- Section 6: Share -->
+  <view class="share-row stagger-5" wx:if="{{isCheckedIn}}">
+    <view class="share-btn" bindtap="generatePoster">📤 分享海报</view>
+  </view>
+
+  <!-- Hidden canvas for poster generation -->
+  <canvas type="2d" id="posterCanvas" class="poster-canvas"></canvas>
+</view>

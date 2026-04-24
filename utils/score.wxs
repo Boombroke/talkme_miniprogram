@@ -1,0 +1,26 @@
+// Score helper for WXML templates
+// WXS supports >= operators (unlike WXML expressions)
+
+function getScoreColor(score) {
+  if (score >= 80) return '#10AC84';
+  if (score >= 60) return '#FF9F43';
+  return '#EE5253';
+}
+
+function getScoreClass(score) {
+  if (score >= 80) return 'score-green';
+  if (score >= 60) return 'score-orange';
+  return 'score-red';
+}
+
+function getTextClass(score) {
+  if (score >= 80) return 'text-green';
+  if (score >= 60) return 'text-orange';
+  return 'text-red';
+}
+
+module.exports = {
+  getScoreColor: getScoreColor,
+  getScoreClass: getScoreClass,
+  getTextClass: getTextClass
+};

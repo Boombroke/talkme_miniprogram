@@ -1,0 +1,227 @@
+<wxs src="../../utils/score.wxs" module="scoreHelper" />
+<view class="grammar-page">
+  <nav-bar title="语法专练" />
+
+  <!-- ========== STAGE: LOADING ========== -->
+  <view class="stage-loading" wx:if="{{stage === 'loading'}}">
+    <view class="loading-wrap">
+      <van-loading size="64rpx" color="#FF6B6B" />
+      <text class="loading-text">正在生成题目...</text>
+      <text class="loading-sub">Generating grammar exercise</text>
+    </view>
+  </view>
+
+  <!-- ========== STAGE: QUESTION ========== -->
+  <view class="stage-question" wx:elif="{{stage === 'question'}}">
+    <!-- Progress indicator -->
+    <view class="progress-bar-wrap">
+      <view class="progress-track">
+        <view class="progress-fill" style="width: {{questionIndex / totalQuestions * 100}}%"></view>
+      </view>
+      <text class="progress-label">{{questionIndex + 1}} / {{totalQuestions}}</text>
+    </view>
+
+    <!-- Question Card -->
+    <view class="question-card shadow-card animate-scale">
+      <!-- Type & Hint -->
+      <view class="question-top">
+        <van-tag plain type="primary" custom-class="type-tag">
+          {{currentQuestion.type === 'fill-blank' ? '填空' : (currentQuestion.type === 'error-correction' ? '纠错' : '句型转换')}}
+        </van-tag>
+        <van-tag plain color="#FF9F43" custom-class="hint-tag" wx:if="{{currentQuestion.hint}}">
+          💡 {{currentQuestion.hint}}
+        </van-tag>
+      </view>
+
+      <!-- Instruction -->
+      <text class="question-instruction">{{currentQuestion.instruction}}</text>
+
+      <!-- Sentence -->
+      <!-- 填空题：句子内嵌输入框 -->
+      <view class="question-sentence-wrap" wx:if="{{isFillBlank}}">
+        <view class="sentence-inline">
+          <block wx:for="{{sentenceSegments}}" wx:key="index" wx:for-item="seg" wx:for-index="idx">
+            <text class="question-sentence">{{seg}}</text>
+            <input
+              wx:if="{{idx < sentenceSegments.length - 1}}"
+              class="blank-input"
+              style="--ch: {{blankAnswers[idx].length > 3 ? blankAnswers[idx].length : 4}}"
+              value="{{blankAnswers[idx]}}"
+              data-idx="{{idx}}"
+              bindinput="onBlankInput"
+              placeholder="..."
+              placeholder-class="blank-placeholder"
+              confirm-type="done"
+              cursor-spacing="20"
+            />
+          </block>
+        </view>
+      </view>
+
+      <!-- 非填空题（纠错 / 句型转换）：原样展示句子 -->
+      <view class="question-sentence-wrap" wx:else>
+        <text class="question-sentence">{{currentQuestion.sentence}}</text>
+      </view>
+    </view>
+
+    <!-- Answer Input：非填空题才显示下方输入框 -->
+    <view class="answer-section">
+      <view class="answer-input-card shadow-card" wx:if="{{!isFillBlank}}">
+        <van-field
+          value="{{userAnswer}}"
+          placeholder="Type your answer here..."
+          border="{{false}}"
+          bind:change="onInput"
+          custom-style="padding: 0; background: transparent; font-size: 30rpx;"
+          input-class="answer-input"
+          autosize
+          type="textarea"
+        />
+      </view>
+
+      <van-button
+        type="primary"
+        round
+        block
+        custom-class="btn-submit"
+        bind:click="submitAnswer"
+        disabled="{{!canSubmit}}"
+      >
+        <view class="btn-inner">
+          <text class="btn-icon">✅</text>
+          <text>提交答案</text>
+        </view>
+      </van-button>
+    </view>
+  </view>
+
+  <!-- ========== STAGE: CHECKING ========== -->
+  <view class="stage-loading" wx:elif="{{stage === 'checking'}}">
+    <view class="loading-wrap">
+      <van-loading size="64rpx" color="#FF6B6B" />
+      <text class="loading-text">正在检查答案...</text>
+      <text class="loading-sub">Checking your answer</text>
+    </view>
+  </view>
+
+  <!-- ========== STAGE: RESULT ========== -->
+  <view class="stage-result" wx:elif="{{stage === 'result'}}">
+    <!-- Correct / Wrong Banner -->
+    <view class="result-banner animate-bounce {{currentResult.isCorrect ? 'correct' : 'wrong'}}">
+      <text class="result-banner-icon">{{currentResult.isCorrect ? '✅' : '❌'}}</text>
+      <text class="result-banner-text">{{currentResult.isCorrect ? 'Correct!' : 'Not quite...'}}</text>
+    </view>
+
+    <!-- Answer Comparison -->
+    <view class="answer-compare-card shadow-card animate-spring">
+      <view class="compare-row">
+        <text class="compare-label">你的答案</text>
+        <text class="compare-value user-answer {{currentResult.isCorrect ? 'text-correct' : 'text-wrong'}}">{{currentResult.userAnswer}}</text>
+      </view>
+      <view class="compare-divider"></view>
+      <view class="compare-row">
+        <text class="compare-label">正确答案</text>
+        <text class="compare-value correct-answer">{{currentResult.question.answer}}</text>
+      </view>
+    </view>
+
+    <!-- Explanation -->
+    <view class="explanation-card shadow-card animate-spring">
+      <text class="explanation-title">📖 语法解析</text>
+      <text class="explanation-text">{{currentResult.question.explanation}}</text>
+    </view>
+
+    <!-- Feedback -->
+    <view class="feedback-card shadow-card animate-spring" wx:if="{{currentResult.feedback}}">
+      <text class="feedback-title">💬 AI 反馈</text>
+      <text class="feedback-text">{{currentResult.feedback}}</text>
+    </view>
+
+    <!-- Next Button -->
+    <view class="result-actions">
+      <van-button
+        type="primary"
+        round
+        block
+        custom-class="btn-next"
+        bind:click="nextQuestion"
+      >
+        <view class="btn-inner">
+          <text class="btn-icon">{{questionIndex >= totalQuestions ? '📊' : '➡️'}}</text>
+          <text>{{questionIndex >= totalQuestions ? '查看总结' : '下一题'}}</text>
+        </view>
+      </van-button>
+    </view>
+  </view>
+
+  <!-- ========== STAGE: SUMMARY ========== -->
+  <view class="stage-summary" wx:elif="{{stage === 'summary'}}">
+    <!-- Score Card -->
+    <view class="summary-score-card animate-bounce shadow-card">
+      <text class="summary-emoji">{{score >= 80 ? '🎉' : (score >= 60 ? '👍' : '💪')}}</text>
+      <view class="summary-score-wrap">
+        <text class="summary-score" style="color: {{scoreHelper.getScoreColor(score)}}">{{score}}</text>
+        <text class="summary-score-total">/ 100</text>
+      </view>
+      <text class="summary-label">{{score >= 80 ? '太棒了！' : (score >= 60 ? '不错哦！' : '继续加油！')}}</text>
+    </view>
+
+    <!-- All Results -->
+    <view class="summary-results">
+      <text class="summary-section-title">答题详情</text>
+
+      <view
+        class="summary-item shadow-card animate-spring"
+        wx:for="{{results}}"
+        wx:key="index"
+        style="animation-delay: {{index * 0.1}}s"
+      >
+        <view class="summary-item-header">
+          <text class="summary-item-num">Q{{index + 1}}</text>
+          <text class="summary-item-icon">{{item.isCorrect ? '✅' : '❌'}}</text>
+        </view>
+
+        <text class="summary-item-sentence">{{item.question.sentence}}</text>
+
+        <view class="summary-item-answers">
+          <view class="summary-answer-row">
+            <text class="answer-label">你的：</text>
+            <text class="answer-val {{item.isCorrect ? 'text-correct' : 'text-wrong'}}">{{item.userAnswer}}</text>
+          </view>
+          <view class="summary-answer-row" wx:if="{{!item.isCorrect}}">
+            <text class="answer-label">正确：</text>
+            <text class="answer-val text-correct">{{item.question.answer}}</text>
+          </view>
+        </view>
+
+        <text class="summary-item-explanation">{{item.question.explanation}}</text>
+      </view>
+    </view>
+
+    <!-- Actions -->
+    <view class="summary-actions">
+      <van-button
+        type="primary"
+        round
+        block
+        custom-class="btn-retry"
+        bind:click="tryAgain"
+      >
+        <view class="btn-inner">
+          <text class="btn-icon">🔄</text>
+          <text>再来一组</text>
+        </view>
+      </van-button>
+      <van-button
+        plain
+        round
+        block
+        custom-class="btn-home"
+        bind:click="goHome"
+      >
+        返回首页
+      </van-button>
+    </view>
+  </view>
+
+</view>

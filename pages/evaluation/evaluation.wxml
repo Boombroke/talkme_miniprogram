@@ -1,0 +1,73 @@
+<wxs src="../../utils/score.wxs" module="scoreHelper" />
+<view class="eval-page">
+  <nav-bar title="评分记录" />
+  <!-- Loading -->
+  <view class="loading-wrap" wx:if="{{isLoading}}">
+    <van-loading size="48rpx" color="#FF6B6B" />
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- Empty State -->
+  <view class="empty-wrap" wx:elif="{{isEmpty}}">
+    <van-empty description="暂无评分记录" />
+  </view>
+
+  <!-- Evaluation List -->
+  <view class="eval-list" wx:else>
+    <view
+      class="eval-card"
+      wx:for="{{evaluations}}"
+      wx:key="_id"
+      bindtap="goToDetail"
+      data-conversation-id="{{item.conversationId}}"
+    >
+      <view class="eval-card-top">
+        <view class="eval-score-big" style="color: {{scoreHelper.getScoreColor(item.totalScore)}}">
+          {{item.totalScore || 0}}
+        </view>
+        <view class="eval-meta">
+          <view class="eval-date">{{item.createTime}}</view>
+          <van-tag
+            plain
+            type="{{item.mode === 'scene' ? 'warning' : 'primary'}}"
+            custom-class="eval-mode-tag"
+          >
+            {{item.mode === 'scene' ? '情景' : '自由'}}
+          </van-tag>
+        </view>
+      </view>
+
+      <!-- 4 Dimension Mini Bars -->
+      <view class="eval-dims">
+        <view class="eval-dim">
+          <text class="dim-name">发音</text>
+          <view class="dim-bar-track">
+            <view class="dim-bar-fill" style="width: {{(item.pronunciation || 0)}}%; background: #FF6B6B;"></view>
+          </view>
+          <text class="dim-val">{{item.pronunciation || 0}}</text>
+        </view>
+        <view class="eval-dim">
+          <text class="dim-name">语法</text>
+          <view class="dim-bar-track">
+            <view class="dim-bar-fill" style="width: {{(item.grammar || 0)}}%; background: #FF9F43;"></view>
+          </view>
+          <text class="dim-val">{{item.grammar || 0}}</text>
+        </view>
+        <view class="eval-dim">
+          <text class="dim-name">流利</text>
+          <view class="dim-bar-track">
+            <view class="dim-bar-fill" style="width: {{(item.fluency || 0)}}%; background: #10AC84;"></view>
+          </view>
+          <text class="dim-val">{{item.fluency || 0}}</text>
+        </view>
+        <view class="eval-dim">
+          <text class="dim-name">词汇</text>
+          <view class="dim-bar-track">
+            <view class="dim-bar-fill" style="width: {{(item.vocabulary || 0)}}%; background: #FECA57;"></view>
+          </view>
+          <text class="dim-val">{{item.vocabulary || 0}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,120 @@
+<view class="result-page animate-fade-in-up">
+  <nav-bar title="评估结果" />
+  <!-- Confetti Animation Container (High Score) -->
+  <view class="confetti-container" wx:if="{{totalScore >= 80}}">
+    <view class="confetti c1"></view>
+    <view class="confetti c2"></view>
+    <view class="confetti c3"></view>
+    <view class="confetti c4"></view>
+    <view class="confetti c5"></view>
+    <view class="confetti c6"></view>
+    <view class="confetti c7"></view>
+    <view class="confetti c8"></view>
+    <view class="confetti c9"></view>
+    <view class="confetti c10"></view>
+  </view>
+
+  <!-- Encouragement Animation Container (Low Score) -->
+  <view class="encouragement-particles" wx:if="{{totalScore < 60}}">
+    <view class="particle p1">💪</view>
+    <view class="particle p2">⭐</view>
+    <view class="particle p3">💪</view>
+    <view class="particle p4">⭐</view>
+  </view>
+
+  <!-- Encouragement -->
+  <view wx:if="{{totalScore === 0}}" class="encouragement-banner banner-nospeech stagger-1">
+    <text class="banner-emoji">😶</text>
+    <text class="encouragement-text">未检测到有效英语语音</text>
+  </view>
+  <view wx:else class="encouragement-banner stagger-1 {{totalScore >= 80 ? 'pulse-bg' : ''}}">
+    <text class="banner-emoji">{{bannerEmoji}}</text>
+    <text class="encouragement-text">{{encouragement}}</text>
+  </view>
+
+  <!-- Score Card Component -->
+  <view class="score-section stagger-2">
+    <score-card
+      score="{{totalScore}}"
+      pronunciation="{{pronunciation}}"
+      grammar="{{grammar}}"
+      fluency="{{fluency}}"
+      vocabulary="{{vocabulary}}"
+      showDetail="{{true}}"
+    />
+  </view>
+
+  <van-divider contentPosition="center" custom-style="color: #FF9F43; border-color: #FF9F43; font-size: 28rpx; padding: 0 32rpx; margin: 48rpx 0; opacity: 0.8;" dashed wx:if="{{correctedSentence || suggestions.length}}">Practice Feedback</van-divider>
+
+  <!-- Corrected Sentence -->
+  <view class="section stagger-3" wx:if="{{correctedSentence}}">
+    <view class="card-container">
+      <view class="section-header">
+        <text class="section-icon">✏️</text>
+        <text class="section-title text-coral">Correction</text>
+        <view class="play-btn {{playingText === correctedSentence ? 'playing' : ''}}" data-text="{{correctedSentence}}" bind:tap="playText">
+          <text class="play-icon">🔊</text>
+          <view class="spinner" wx:if="{{playingText === correctedSentence}}"></view>
+        </view>
+      </view>
+      <view class="correction-card">
+        <text class="correction-text">{{correctedSentence}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Improvement Suggestions -->
+  <view class="section stagger-4" wx:if="{{suggestions.length}}">
+    <view class="card-container">
+      <view class="section-header">
+        <text class="section-icon">💡</text>
+        <text class="section-title text-orange">Suggestions</text>
+      </view>
+      <view class="suggestions-card">
+        <view class="suggestion-item" wx:for="{{suggestions}}" wx:key="index">
+          <view class="suggestion-badge">{{index + 1}}</view>
+          <text class="suggestion-text">{{item}}</text>
+          <view class="play-btn {{playingText === item ? 'playing' : ''}}" data-text="{{item}}" bind:tap="playText">
+            <text class="play-icon">🔊</text>
+            <view class="spinner" wx:if="{{playingText === item}}"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- Scene Completion -->
+  <view class="section stagger-5" wx:if="{{sceneCompletion}}">
+    <view class="card-container">
+      <view class="section-header">
+        <text class="section-icon">🎯</text>
+        <text class="section-title text-coral">场景完成度</text>
+      </view>
+      <view class="scene-completion-card">
+        <view class="completion-score">{{sceneCompletion.score}}分</view>
+        <view class="goals-list" wx:if="{{sceneCompletion.completedGoals.length}}">
+          <text class="goal-label">✅ 已完成：</text>
+          <text class="goal-item" wx:for="{{sceneCompletion.completedGoals}}" wx:key="index">{{item}}</text>
+        </view>
+        <view class="goals-list" wx:if="{{sceneCompletion.missedGoals.length}}">
+          <text class="goal-label">❌ 未完成：</text>
+          <text class="goal-item" wx:for="{{sceneCompletion.missedGoals}}" wx:key="index">{{item}}</text>
+        </view>
+        <text class="scene-feedback" wx:if="{{sceneCompletion.feedback}}">{{sceneCompletion.feedback}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Action Buttons -->
+  <view class="action-buttons stagger-6">
+    <van-button round block custom-class="flex-1 btn-primary" bind:click="tryAgain">
+      <text class="btn-text-white">Try Again</text>
+    </van-button>
+    <van-button wx:if="{{totalScore < 80 && correctedSentence}}" round block custom-class="flex-1 btn-secondary" bind:click="replayCorrection">
+      <text class="btn-text-coral">Re-listen Correction</text>
+    </van-button>
+    <van-button round block plain custom-class="flex-1 btn-secondary" bind:click="goHome">
+      <text class="btn-text-coral">Back to Home</text>
+    </van-button>
+  </view>
+</view>

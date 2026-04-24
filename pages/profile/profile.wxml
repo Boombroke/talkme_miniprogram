@@ -1,0 +1,210 @@
+<view class="profile-page {{isLoggedIn ? '' : 'is-guest'}}">
+  <nav-bar title="个人中心" show-back="{{false}}" />
+
+  <!-- Header Section -->
+  <view class="header-section animate-fade-in">
+    <!-- 已登录：用户卡片（点击头像/昵称区域可进入编辑 ActionSheet） -->
+    <view class="user-card" wx:if="{{isLoggedIn}}" bindtap="onTapAvatar">
+      <view class="user-avatar">
+        <van-image
+          wx:if="{{userInfo.avatarUrl}}"
+          round
+          width="144rpx"
+          height="144rpx"
+          src="{{userInfo.avatarUrl}}"
+          fit="cover"
+          custom-class="avatar-img"
+        />
+        <view class="avatar-placeholder" wx:else>
+          <text>😊</text>
+        </view>
+      </view>
+      <view class="user-info">
+        <text class="user-name">{{userInfo.nickName || '用户'}}</text>
+        <view class="edit-btn" catchtap="onEditProfile">
+          <text>✏️ 编辑资料</text>
+        </view>
+        <view class="user-id-wrap">
+          <text class="id-icon">🆔</text>
+          <text class="user-id">ID: {{userInfo._id || '--'}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 未登录：登录卡片（微信一键 / 账号密码 两种方式） -->
+    <view class="login-card" wx:else>
+      <view class="login-title">欢迎来到 Talkme</view>
+
+      <!-- 登录方式切换 -->
+      <view class="login-mode-tabs">
+        <view
+          class="login-mode-tab {{loginMode === 'wechat' ? 'is-active' : ''}}"
+          data-mode="wechat"
+          bindtap="switchLoginMode"
+        >微信登录</view>
+        <view
+          class="login-mode-tab {{loginMode === 'account' ? 'is-active' : ''}}"
+          data-mode="account"
+          bindtap="switchLoginMode"
+        >账号登录</view>
+      </view>
+
+      <!-- 微信一键登录 -->
+      <block wx:if="{{loginMode === 'wechat'}}">
+        <view class="login-subtitle">点击头像，一键登录</view>
+
+        <button
+          class="avatar-choose-btn {{loggingIn ? 'is-loading' : ''}}"
+          open-type="chooseAvatar"
+          bindchooseavatar="onChooseAvatar"
+          disabled="{{loggingIn}}"
+          hover-class="none"
+        >
+          <view class="avatar-choose-placeholder">
+            <text class="avatar-choose-icon">📷</text>
+          </view>
+        </button>
+
+        <view class="login-hint">
+          <text wx:if="{{!loggingIn}}">选择头像即完成登录，昵称可稍后在「编辑资料」中修改</text>
+          <text wx:else>登录中...</text>
+        </view>
+      </block>
+
+      <!-- 账号密码登录 / 注册 -->
+      <block wx:else>
+        <view class="login-subtitle">{{accountIsRegister ? '注册账号' : '账号登录'}}</view>
+
+        <view class="account-form">
+          <input
+            class="account-input"
+            placeholder="用户名（4-20 位字母/数字/下划线）"
+            placeholder-class="account-input-placeholder"
+            maxlength="20"
+            data-field="username"
+            value="{{accountForm.username}}"
+            bindinput="onAccountInput"
+            disabled="{{loggingIn}}"
+          />
+
+          <input
+            class="account-input"
+            password
+            placeholder="密码（至少 6 位，含字母与数字）"
+            placeholder-class="account-input-placeholder"
+            maxlength="40"
+            data-field="password"
+            value="{{accountForm.password}}"
+            bindinput="onAccountInput"
+            disabled="{{loggingIn}}"
+          />
+
+          <input
+            wx:if="{{accountIsRegister}}"
+            class="account-input"
+            placeholder="昵称（可选）"
+            placeholder-class="account-input-placeholder"
+            maxlength="20"
+            data-field="nickName"
+            value="{{accountForm.nickName}}"
+            bindinput="onAccountInput"
+            disabled="{{loggingIn}}"
+          />
+
+          <view class="account-error" wx:if="{{accountError}}">{{accountError}}</view>
+
+          <button
+            class="account-submit-btn {{loggingIn ? 'is-loading' : ''}}"
+            disabled="{{loggingIn}}"
+            hover-class="none"
+            bindtap="onSubmitAccount"
+          >{{loggingIn ? '请稍候...' : (accountIsRegister ? '注册并登录' : '登录')}}</button>
+
+          <view class="account-toggle-link" bindtap="toggleAccountMode">
+            {{accountIsRegister ? '已有账号？去登录' : '没有账号？去注册'}}
+          </view>
+
+          <view class="account-test-hint">测试账号：test / test1234</view>
+        </view>
+      </block>
+    </view>
+
+    <view class="bg-shape shape-1"></view>
+    <view class="bg-shape shape-2"></view>
+  </view>
+
+  <!-- Stats Grid（仅已登录时显示） -->
+  <view class="stats-container animate-fade-in" wx:if="{{isLoggedIn}}" style="animation-delay: 0.1s">
+    <view class="stats-grid">
+      <view class="stat-item">
+        <text class="stat-value">{{stats.consecutiveDays}}</text>
+        <text class="stat-label">连续打卡</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{stats.totalDays}}</text>
+        <text class="stat-label">累计天数</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{stats.totalPracticeTime}}</text>
+        <text class="stat-label">练习时长</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-value">{{stats.averageScore || '--'}}</text>
+        <text class="stat-label">平均分数</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Learning Stats Chart（仅已登录时显示） -->
+  <view class="chart-section animate-fade-in" wx:if="{{isLoggedIn}}" style="animation-delay: 0.15s">
+    <view class="chart-header">
+      <view class="chart-title-row"><svg-icon name="chart" size="{{36}}" color="#FF6B6B" /><text class="chart-title">学习趋势</text></view>
+    </view>
+    <view class="chart-container">
+      <canvas type="2d" id="statsChart" class="stats-canvas" wx:if="{{hasEvalData}}"></canvas>
+      <view class="chart-empty" wx:else>
+        <svg-icon name="chart" size="{{80}}" color="#B2BEC3" />
+        <text class="chart-empty-text">完成一次练习评估后即可查看趋势</text>
+        <text class="chart-empty-hint">试试影子跟读，最快上手！</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- Menu List -->
+  <view class="menu-section animate-fade-in" style="animation-delay: 0.2s">
+    <van-cell-group inset custom-class="custom-cell-group">
+      <van-cell title="练习记录" is-link size="large" bind:click="goToHistory" custom-class="menu-cell">
+        <view slot="icon" class="menu-icon-wrap">
+          <svg-icon name="history" size="{{40}}" color="#FF6B6B" />
+        </view>
+      </van-cell>
+      <van-cell title="评分记录" is-link size="large" bind:click="goToEvaluation" custom-class="menu-cell">
+        <view slot="icon" class="menu-icon-wrap">
+          <svg-icon name="star" size="{{40}}" color="#FF9F43" />
+        </view>
+      </van-cell>
+      <van-cell title="我的收藏" is-link size="large" bind:click="goToCollection" custom-class="menu-cell">
+        <view slot="icon" class="menu-icon-wrap">
+          <svg-icon name="collection" size="{{40}}" color="#EE5253" />
+        </view>
+      </van-cell>
+      <van-cell title="练习提醒" is-link size="large" bind:click="onSetReminder" custom-class="menu-cell">
+        <view slot="icon" class="menu-icon-wrap">
+          <svg-icon name="bell" size="{{40}}" color="#FECA57" />
+        </view>
+      </van-cell>
+      <van-cell title="关于我们" is-link size="large" bind:click="goToAbout" border="{{false}}" custom-class="menu-cell">
+        <view slot="icon" class="menu-icon-wrap">
+          <svg-icon name="info" size="{{40}}" color="#10AC84" />
+        </view>
+      </van-cell>
+    </van-cell-group>
+  </view>
+
+  <!-- Logout -->
+  <view class="action-section animate-fade-in" wx:if="{{isLoggedIn}}" style="animation-delay: 0.3s">
+    <van-button plain round block size="large" bind:click="onLogout" custom-class="logout-btn">
+      退出登录
+    </van-button>
+  </view>
+</view>

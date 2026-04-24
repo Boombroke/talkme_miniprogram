@@ -1,0 +1,68 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/chat/chat",
+    "pages/scene/list/list",
+    "pages/scene/detail/detail",
+    "pages/checkin/checkin",
+    "pages/history/list/list",
+    "pages/history/detail/detail",
+    "pages/profile/profile",
+    "pages/result/result",
+    "pages/collection/collection",
+    "pages/evaluation/evaluation",
+    "pages/topic/topic",
+    "pages/grammar/grammar",
+    "pages/shadow/shadow",
+    "pages/vocab/vocab",
+    "pages/challenge/challenge"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "navigationBarBackgroundColor": "#FF6B6B",
+    "navigationBarTitleText": "",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F8F9FA",
+    "backgroundTextStyle": "dark"
+  },
+  "usingComponents": {
+    "nav-bar": "/components/nav-bar/nav-bar",
+    "svg-icon": "/components/svg-icon/svg-icon"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#999999",
+    "selectedColor": "#FF6B6B",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "images/tab/home.png",
+        "selectedIconPath": "images/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/checkin/checkin",
+        "text": "打卡",
+        "iconPath": "images/tab/checkin.png",
+        "selectedIconPath": "images/tab/checkin-active.png"
+      },
+      {
+        "pagePath": "pages/history/list/list",
+        "text": "记录",
+        "iconPath": "images/tab/history.png",
+        "selectedIconPath": "images/tab/history-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "images/tab/profile.png",
+        "selectedIconPath": "images/tab/profile-active.png"
+      }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents"
+}

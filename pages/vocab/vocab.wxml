@@ -1,0 +1,184 @@
+<view class="vocab-page">
+  <nav-bar title="词汇闪卡" />
+
+  <!-- Progress Indicator -->
+  <view class="progress-bar-wrap" wx:if="{{stage !== 'summary'}}">
+    <view class="progress-dots">
+      <view
+        class="progress-dot {{index < currentIndex ? 'done' : (index === currentIndex ? 'active' : '')}}"
+        wx:for="{{words}}"
+        wx:key="index"
+      ></view>
+    </view>
+    <text class="progress-text">{{currentIndex + 1}} / {{words.length}}</text>
+  </view>
+
+  <!-- ===== CARD Stage ===== -->
+  <view class="stage-card" wx:if="{{stage === 'card'}}">
+    <view class="flashcard-container" bindtap="toggleMeaning">
+      <view class="flashcard {{showMeaning ? 'flipped' : ''}}">
+        <!-- Front -->
+        <view class="card-face card-front">
+          <van-tag plain type="primary" custom-class="pos-tag">{{currentWord.pos}}</van-tag>
+          <text class="card-word">{{currentWord.word}}</text>
+          <text class="card-phonetic">{{currentWord.phonetic}}</text>
+          <text class="card-tap-hint">Tap to flip</text>
+        </view>
+        <!-- Back -->
+        <view class="card-face card-back">
+          <text class="card-word-small">{{currentWord.word}}</text>
+          <view class="card-divider"></view>
+          <text class="card-meaning">{{currentWord.meaning}}</text>
+          <view class="card-example-wrap">
+            <text class="card-example-label">Example</text>
+            <text class="card-example">{{currentWord.example}}</text>
+          </view>
+          <text class="card-tap-hint">Tap to flip back</text>
+        </view>
+      </view>
+    </view>
+
+    <van-button
+      round
+      block
+      custom-class="btn-primary"
+      bind:click="startPractice"
+    >
+      <text class="btn-text-white">✍️ Make a Sentence</text>
+    </van-button>
+  </view>
+
+  <!-- ===== PRACTICE Stage ===== -->
+  <view class="stage-practice" wx:elif="{{stage === 'practice'}}">
+    <view class="practice-word-banner">
+      <text class="practice-word">{{currentWord.word}}</text>
+      <text class="practice-meaning">{{currentWord.meaning}}</text>
+    </view>
+
+    <view class="input-section">
+      <text class="input-label">Use "{{currentWord.word}}" in a sentence:</text>
+      <view class="sentence-input-wrap">
+        <textarea
+          class="sentence-input"
+          placeholder="Type your sentence here..."
+          placeholder-style="color: #B2BEC3;"
+          value="{{userSentence}}"
+          bindinput="onInput"
+          auto-height
+          maxlength="200"
+          focus="{{true}}"
+        />
+      </view>
+      <text class="char-count">{{userSentence.length}} / 200</text>
+    </view>
+
+    <van-button
+      round
+      block
+      custom-class="btn-primary"
+      bind:click="submitSentence"
+      disabled="{{!canSubmitSentence}}"
+    >
+      <text class="btn-text-white">🚀 Submit</text>
+    </van-button>
+  </view>
+
+  <!-- ===== CHECKING Stage ===== -->
+  <view class="stage-checking" wx:elif="{{stage === 'checking'}}">
+    <view class="loading-wrap">
+      <van-loading size="48rpx" color="#FF6B6B" />
+      <text class="loading-text">AI is checking...</text>
+    </view>
+  </view>
+
+  <!-- ===== FEEDBACK Stage ===== -->
+  <view class="stage-feedback" wx:elif="{{stage === 'feedback'}}">
+    <!-- Correct/Wrong Banner -->
+    <view class="feedback-banner {{feedback.correct ? 'banner-correct' : 'banner-wrong'}}">
+      <text class="feedback-emoji">{{feedback.correct ? '✅' : '❌'}}</text>
+      <text class="feedback-verdict">{{feedback.correct ? 'Correct!' : 'Not quite right'}}</text>
+    </view>
+
+    <!-- Your Sentence -->
+    <view class="feedback-card">
+      <view class="fb-section">
+        <text class="fb-label">Your Sentence</text>
+        <text class="fb-sentence">{{userSentence}}</text>
+      </view>
+
+      <!-- Naturalness Score -->
+      <view class="fb-section">
+        <text class="fb-label">Naturalness</text>
+        <view class="naturalness-bar">
+          <view class="naturalness-fill" style="width: {{feedback.naturalness || 0}}%; background: {{(feedback.naturalness || 0) >= 80 ? '#10AC84' : ((feedback.naturalness || 0) >= 60 ? '#FF9F43' : '#FF6B6B')}};"></view>
+        </view>
+        <text class="naturalness-score">{{feedback.naturalness || 0}}%</text>
+      </view>
+
+      <!-- Feedback Text -->
+      <view class="fb-section" wx:if="{{feedback.feedback}}">
+        <text class="fb-label">Feedback</text>
+        <text class="fb-text">{{feedback.feedback}}</text>
+      </view>
+
+      <!-- Better Version -->
+      <view class="fb-section" wx:if="{{feedback.betterVersion}}">
+        <text class="fb-label">Better Version</text>
+        <text class="fb-better">{{feedback.betterVersion}}</text>
+      </view>
+    </view>
+
+    <van-button
+      round
+      block
+      custom-class="btn-primary"
+      bind:click="nextWord"
+    >
+      <text class="btn-text-white">{{currentIndex + 1 >= words.length ? '📊 See Summary' : '➡️ Next Word'}}</text>
+    </van-button>
+  </view>
+
+  <!-- ===== SUMMARY Stage ===== -->
+  <view class="stage-summary" wx:elif="{{stage === 'summary'}}">
+    <view class="summary-banner">
+      <text class="summary-emoji">🎉</text>
+      <text class="summary-title">All Done!</text>
+    </view>
+
+    <!-- Stats -->
+    <view class="stats-row">
+      <view class="stat-card">
+        <text class="stat-number">{{correctCount}}</text>
+        <text class="stat-label">Correct</text>
+      </view>
+      <view class="stat-card">
+        <text class="stat-number">{{results.length}}</text>
+        <text class="stat-label">Total</text>
+      </view>
+    </view>
+
+    <!-- Results List -->
+    <view class="results-list">
+      <view class="result-item" wx:for="{{results}}" wx:key="index">
+        <view class="result-header">
+          <text class="result-word">{{item.word.word}}</text>
+          <text class="result-verdict {{item.feedback.correct ? 'text-green' : 'text-red'}}">
+            {{item.feedback.correct ? '✅' : '❌'}}
+          </text>
+        </view>
+        <text class="result-sentence">{{item.userSentence}}</text>
+        <text class="result-fb" wx:if="{{item.feedback.feedback}}">{{item.feedback.feedback}}</text>
+      </view>
+    </view>
+
+    <view class="action-buttons">
+      <van-button round block custom-class="btn-primary flex-1" bind:click="tryAgain">
+        <text class="btn-text-white">🔄 Try Again</text>
+      </van-button>
+      <van-button round block plain custom-class="btn-secondary flex-1" bind:click="goHome">
+        <text class="btn-text-coral">🏠 Home</text>
+      </van-button>
+    </view>
+  </view>
+
+</view>

@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "chat-bubble": "/components/chat-bubble/chat-bubble",
+    "voice-btn": "/components/voice-btn/voice-btn",
+    "van-transition": "../../miniprogram_npm/@vant/weapp/transition/index",
+    "van-field": "../../miniprogram_npm/@vant/weapp/field/index"
+  },
+  "navigationBarTitleText": "对话练习"
+}

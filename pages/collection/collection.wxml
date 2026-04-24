@@ -1,0 +1,59 @@
+<view class="collection-page">
+  <nav-bar title="我的收藏" />
+  <!-- Filter Tabs -->
+  <view class="filter-tabs">
+    <view class="filter-tab {{filter === 'all' ? 'active' : ''}}" data-filter="all" bindtap="onFilterChange">
+      <text>全部</text>
+    </view>
+    <view class="filter-tab {{filter === 'unmastered' ? 'active' : ''}}" data-filter="unmastered" bindtap="onFilterChange">
+      <text>未掌握</text>
+    </view>
+    <view class="filter-tab {{filter === 'mastered' ? 'active' : ''}}" data-filter="mastered" bindtap="onFilterChange">
+      <text>已掌握</text>
+    </view>
+  </view>
+
+  <!-- Loading -->
+  <view class="loading-wrap" wx:if="{{isLoading}}">
+    <van-loading size="48rpx" color="#FF6B6B" />
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- Empty State -->
+  <view class="empty-wrap" wx:elif="{{isEmpty}}">
+    <text class="empty-icon">📚</text>
+    <text class="empty-text">暂无收藏</text>
+    <text class="empty-hint">长按对话气泡即可收藏哦</text>
+  </view>
+
+  <!-- Collection List -->
+  <scroll-view class="collection-list" scroll-y wx:else>
+    <view class="collection-card {{item.mastered ? 'mastered' : ''}}" wx:for="{{collections}}" wx:key="_id">
+      <!-- Role badge -->
+      <view class="card-header">
+        <view class="role-badge {{item.role === 'user' ? 'role-user' : 'role-ai'}}">
+          <text>{{item.role === 'user' ? '🙋 我' : '🤖 AI'}}</text>
+        </view>
+        <text class="card-source" wx:if="{{item.source}}">{{item.source}}</text>
+      </view>
+
+      <!-- Content -->
+      <view class="card-content">
+        <text class="content-text">{{item.content}}</text>
+      </view>
+
+      <!-- Actions -->
+      <view class="card-actions">
+        <view class="action-btn copy-btn" data-content="{{item.content}}" bindtap="copyText">
+          <text>📋 复制</text>
+        </view>
+        <view class="action-btn mastered-btn {{item.mastered ? 'is-mastered' : ''}}" data-id="{{item._id}}" data-mastered="{{item.mastered}}" bindtap="toggleMastered">
+          <text>{{item.mastered ? '✅ 已掌握' : '⬜ 未掌握'}}</text>
+        </view>
+        <view class="action-btn delete-btn" data-id="{{item._id}}" bindtap="deleteItem">
+          <text>🗑️ 删除</text>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+</view>

@@ -1,0 +1,10 @@
+{
+  "name": "textToSpeech",
+  "version": "1.0.0",
+  "description": "语音合成云函数（备用方案）",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3",
+    "tencentcloud-sdk-nodejs": "^4.0.0"
+  }
+}

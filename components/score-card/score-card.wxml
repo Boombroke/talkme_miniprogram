@@ -1,0 +1,129 @@
+<view class="score-card animate-fade-in-up">
+  <!-- Total Score Ring -->
+  <view class="score-header">
+    <van-circle
+      value="{{ animatedScore }}"
+      color="{{ animatedScore >= 80 ? 'url(#score-grad)' : (animatedScore >= 60 ? '#FECA57' : '#EE5253') }}"
+      layer-color="#FFF0E6"
+      stroke-width="10"
+      size="140"
+    >
+      <defs>
+        <linearGradient id="score-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FF6B6B" />
+          <stop offset="100%" stop-color="#FF9F43" />
+        </linearGradient>
+      </defs>
+      <view class="ring-score">
+        <text class="score-number">{{animatedScore}}</text>
+        <text class="score-label">Total Score</text>
+      </view>
+    </van-circle>
+  </view>
+
+  <!-- 4 Dimension Bars -->
+  <view class="dimensions">
+    <view class="dimension-item">
+      <view class="dim-header">
+        <text class="dim-label">Pronunciation</text>
+        <text class="dim-score text-coral">{{pronunciation.score}}</text>
+      </view>
+      <van-progress 
+        percentage="{{pronunciation.score}}" 
+        stroke-width="10" 
+        show-pivot="{{false}}"
+        color="#FF6B6B" 
+        track-color="#FFF0E6"
+      />
+    </view>
+
+    <view class="dimension-item">
+      <view class="dim-header">
+        <text class="dim-label">Grammar</text>
+        <text class="dim-score text-orange">{{grammar.score}}</text>
+      </view>
+      <van-progress 
+        percentage="{{grammar.score}}" 
+        stroke-width="10" 
+        show-pivot="{{false}}"
+        color="#FF9F43" 
+        track-color="#FFF0E6"
+      />
+    </view>
+
+    <view class="dimension-item">
+      <view class="dim-header">
+        <text class="dim-label">Fluency</text>
+        <text class="dim-score text-teal">{{fluency.score}}</text>
+      </view>
+      <van-progress 
+        percentage="{{fluency.score}}" 
+        stroke-width="10" 
+        show-pivot="{{false}}"
+        color="#10AC84" 
+        track-color="#FFF0E6"
+      />
+    </view>
+
+    <view class="dimension-item">
+      <view class="dim-header">
+        <text class="dim-label">Vocabulary</text>
+        <text class="dim-score text-yellow">{{vocabulary.score}}</text>
+      </view>
+      <van-progress 
+        percentage="{{vocabulary.score}}" 
+        stroke-width="10" 
+        show-pivot="{{false}}"
+        color="#FECA57" 
+        track-color="#FFF0E6"
+      />
+    </view>
+  </view>
+
+  <!-- Expandable Detail -->
+  <block wx:if="{{showDetail}}">
+    <van-divider dashed custom-style="border-color: #FF9F43; opacity: 0.3;" />
+    <van-collapse value="{{ expanded ? ['1'] : [] }}" bind:change="toggleDetail" border="{{false}}">
+      <van-collapse-item title="{{ expanded ? 'Hide Details' : 'View Details' }}" name="1" border="{{false}}" custom-class="collapse-custom">
+        <view class="detail-content">
+          <block wx:if="{{pronunciation.issues.length > 0}}">
+            <view class="detail-section">
+              <text class="detail-title text-coral">Pronunciation Issues</text>
+              <view class="issue-item" wx:for="{{pronunciation.issues}}" wx:key="index">
+                <text class="issue-dot text-coral">•</text>
+                <text class="issue-text">{{item}}</text>
+              </view>
+            </view>
+          </block>
+          <block wx:if="{{grammar.issues.length > 0}}">
+            <view class="detail-section">
+              <text class="detail-title text-orange">Grammar Issues</text>
+              <view class="issue-item" wx:for="{{grammar.issues}}" wx:key="index">
+                <text class="issue-dot text-orange">•</text>
+                <text class="issue-text">{{item}}</text>
+              </view>
+            </view>
+          </block>
+          <block wx:if="{{fluency.issues.length > 0}}">
+            <view class="detail-section">
+              <text class="detail-title text-teal">Fluency Issues</text>
+              <view class="issue-item" wx:for="{{fluency.issues}}" wx:key="index">
+                <text class="issue-dot text-teal">•</text>
+                <text class="issue-text">{{item}}</text>
+              </view>
+            </view>
+          </block>
+          <block wx:if="{{vocabulary.issues.length > 0}}">
+            <view class="detail-section">
+              <text class="detail-title text-yellow">Vocabulary Issues</text>
+              <view class="issue-item" wx:for="{{vocabulary.issues}}" wx:key="index">
+                <text class="issue-dot text-yellow">•</text>
+                <text class="issue-text">{{item}}</text>
+              </view>
+            </view>
+          </block>
+        </view>
+      </van-collapse-item>
+    </van-collapse>
+  </block>
+</view>

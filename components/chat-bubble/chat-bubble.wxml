@@ -1,0 +1,128 @@
+<view class="bubble-wrapper {{role === 'user' ? 'bubble-right' : 'bubble-left'}}">
+  <!-- AI Avatar -->
+  <view class="avatar ai-avatar" wx:if="{{role === 'assistant'}}">
+    <text class="avatar-text">{{aiAvatarEmoji || '🤖'}}</text>
+  </view>
+
+  <view class="bubble-body {{role === 'user' ? 'bubble-right-body' : 'bubble-left-body'}}">
+    <!-- VOICE MESSAGE BRANCH -->
+    <block wx:if="{{type === 'voice'}}">
+      <view class="voice-row {{role === 'user' ? 'voice-row-user' : 'voice-row-ai'}}">
+        <view class="voice-bubble {{role === 'user' ? 'voice-bubble-user' : 'voice-bubble-ai'}} {{isVoicePlaying ? 'voice-bubble-playing' : ''}}"
+              style="width: {{isTyping ? 180 : voiceWidth}}rpx;"
+              bindtap="onTapVoice"
+              bindlongpress="onLongPress">
+          <view class="typing-dots" wx:if="{{isTyping}}">
+            <view class="typing-dot"></view>
+            <view class="typing-dot"></view>
+            <view class="typing-dot"></view>
+          </view>
+          <block wx:elif="{{role === 'user'}}">
+            <text class="voice-duration">{{duration}}″</text>
+            <view class="voice-wave {{isVoicePlaying ? 'is-playing' : ''}}">
+              <view class="voice-wave-bar"></view>
+              <view class="voice-wave-bar"></view>
+              <view class="voice-wave-bar"></view>
+            </view>
+            <text class="voice-icon">🔊</text>
+          </block>
+          <block wx:else>
+            <text class="voice-icon">🔊</text>
+            <view class="voice-wave {{isVoicePlaying ? 'is-playing' : ''}}">
+              <view class="voice-wave-bar"></view>
+              <view class="voice-wave-bar"></view>
+              <view class="voice-wave-bar"></view>
+            </view>
+            <text class="voice-duration">{{duration}}″</text>
+          </block>
+        </view>
+
+        <view class="voice-actions" wx:if="{{!isTyping}}">
+          <view class="voice-action-btn" bindtap="onTapTranscript">
+            <text class="voice-action-icon">📝</text>
+            <text class="voice-action-label">{{showTranscript ? '收起' : '转文字'}}</text>
+          </view>
+          <view class="voice-action-btn" bindtap="onTapTranslate">
+            <text class="voice-action-icon">🌐</text>
+            <text class="voice-action-label">{{translating ? '翻译中...' : (showTranslation ? '收起' : '翻译')}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="voice-transcript" wx:if="{{showTranscript}}">
+        <text class="voice-transcript-text {{!content ? 'is-empty' : ''}}">{{content || '好像什么也没说…'}}</text>
+      </view>
+
+      <view class="translate-content" wx:if="{{showTranslation && translatedText}}">
+        <text class="translate-text">{{translatedText}}</text>
+      </view>
+
+      <!-- Correction hint for AI voice messages -->
+      <view class="correction-hint" wx:if="{{correction && role === 'assistant'}}">
+        <text class="correction-icon">✏️</text>
+        <text class="correction-text">{{correction}}</text>
+      </view>
+      <!-- Retry hint for failed messages -->
+      <view class="retry-hint" wx:if="{{sendFailed}}" bindtap="onRetry">
+        <text class="retry-text">⚠️ 发送失败，点击重试</text>
+      </view>
+    </block>
+
+    <!-- TEXT MESSAGE BRANCH (original behavior) -->
+    <block wx:else>
+      <view class="bubble {{role === 'user' ? 'bubble-user' : 'bubble-ai'}}" bindlongpress="onLongPress">
+        <view class="typing-dots" wx:if="{{isTyping}}">
+          <view class="typing-dot"></view>
+          <view class="typing-dot"></view>
+          <view class="typing-dot"></view>
+        </view>
+        <text class="bubble-content" wx:if="{{!isTyping}}">{{displayContent || content}}</text>
+        <view class="bubble-cursor" wx:if="{{!isTyping && isStreaming && displayContent.length < content.length}}">|</view>
+
+        <!-- Audio play button for AI messages (hidden during streaming) -->
+        <view class="bubble-footer" wx:if="{{role === 'assistant' && content && !isStreaming}}" bindtap="onTapTTS">
+          <view class="audio-btn {{isPlaying ? 'is-playing' : ''}}">
+            <view wx:if="{{isLoading}}" class="loading-pulse">
+              <text class="dot">.</text><text class="dot">.</text><text class="dot">.</text>
+            </view>
+            <block wx:else>
+              <text class="audio-icon">🔊</text>
+              <text class="audio-text" wx:if="{{audioLabel}}">{{audioLabel}}</text>
+            </block>
+          </view>
+        </view>
+
+        <!-- Translation button for AI messages -->
+        <view class="translate-section" wx:if="{{role === 'assistant' && content && !isStreaming}}">
+          <view class="translate-btn" bindtap="onTapTranslate">
+            <text class="translate-icon">🌐</text>
+            <text class="translate-label">{{translating ? '翻译中...' : (showTranslation ? '收起' : '翻译')}}</text>
+          </view>
+          <view class="translate-content" wx:if="{{showTranslation && translatedText}}">
+            <text class="translate-text">{{translatedText}}</text>
+          </view>
+        </view>
+      </view>
+      <!-- Correction hint for AI messages -->
+      <view class="correction-hint" wx:if="{{correction && role === 'assistant'}}">
+        <text class="correction-icon">✏️</text>
+        <text class="correction-text">{{correction}}</text>
+      </view>
+      <!-- Retry hint for failed messages -->
+      <view class="retry-hint" wx:if="{{sendFailed}}" bindtap="onRetry">
+        <text class="retry-text">⚠️ 发送失败，点击重试</text>
+      </view>
+    </block>
+  </view>
+
+  <!-- User Avatar：登录后用微信头像，游客显示 😊 -->
+  <view class="avatar user-avatar" wx:if="{{role === 'user'}}">
+    <image
+      wx:if="{{userAvatarUrl}}"
+      class="avatar-img-full"
+      src="{{userAvatarUrl}}"
+      mode="aspectFill"
+    />
+    <text wx:else class="avatar-text">😊</text>
+  </view>
+</view>

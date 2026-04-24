@@ -1,0 +1,69 @@
+<view class="detail-page animate-fade-in" wx:if="{{scene}}">
+  <nav-bar title="场景详情" />
+  <!-- Scene Header -->
+  <view class="scene-header">
+    <view class="header-icon-bg">
+      <text class="bg-icon-text">{{scene.icon}}</text>
+    </view>
+    <text class="scene-icon animate-pop">{{scene.icon}}</text>
+    <text class="scene-name stagger-1">{{scene.name}}</text>
+    <text class="scene-name-en stagger-2">{{scene.nameEn}}</text>
+    <view class="scene-tags stagger-3">
+      <van-tag round color="rgba(255,255,255,0.25)" text-color="#FFF" custom-class="header-tag">{{scene.difficulty}}</van-tag>
+      <van-tag round color="rgba(255,255,255,0.15)" text-color="rgba(255,255,255,0.9)" custom-class="header-tag">{{scene.aiRole}}</van-tag>
+    </view>
+  </view>
+
+  <view class="content-wrapper">
+    <!-- Scene Description -->
+    <view class="section stagger-4">
+      <text class="section-title">✨ 场景描述</text>
+      <van-cell-group inset custom-class="card-group">
+        <van-cell border="{{false}}">
+          <view slot="title" class="desc-text">{{scene.description}}</view>
+        </van-cell>
+      </van-cell-group>
+    </view>
+
+    <!-- Useful Phrases -->
+    <view class="section stagger-5">
+      <text class="section-title">💬 常用句型</text>
+      <van-cell-group inset custom-class="card-group">
+        <van-cell wx:for="{{scene.tips}}" wx:key="index" border="{{ index !== scene.tips.length - 1 }}">
+          <view slot="title" class="phrase-item">
+            <text class="phrase-bullet">🔥</text>
+            <text class="phrase-text">{{item}}</text>
+          </view>
+        </van-cell>
+      </van-cell-group>
+    </view>
+
+    <!-- Key Vocabulary -->
+    <view class="section stagger-6">
+      <text class="section-title">📚 关键词汇</text>
+      <van-cell-group inset custom-class="card-group">
+        <van-cell border="{{false}}">
+          <view slot="title" class="vocab-grid">
+            <van-tag 
+              wx:for="{{scene.vocabulary}}" 
+              wx:key="*this"
+              round 
+              color="#FFF0E6"
+              text-color="#FF6B6B"
+              custom-class="vocab-tag"
+            >
+              {{item}}
+            </van-tag>
+          </view>
+        </van-cell>
+      </van-cell-group>
+    </view>
+  </view>
+
+  <!-- Start Button (fixed bottom) -->
+  <view class="start-section stagger-7">
+    <button class="start-btn-custom" bindtap="startChat">
+      开始对话
+    </button>
+  </view>
+</view>

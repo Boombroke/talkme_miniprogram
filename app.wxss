@@ -1,0 +1,129 @@
+/* Global Styles - 互动式英语口语练习系统 */
+@import 'styles/variables.wxss';
+
+/* ========== Page Base Styles ========== */
+page {
+  background-color: var(--color-bg-primary);
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    Segoe UI, Arial, Roboto, 'PingFang SC', 'miui', 'Hiragino Sans GB',
+    'Microsoft Yahei', sans-serif;
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
+}
+
+/* ========== Animation Library (CSS-Only) ========== */
+@keyframes bounceIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.05); opacity: 1; }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes springUp {
+  0% { transform: translateY(100rpx); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-bounce {
+  animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.animate-spring {
+  animation: springUp 1s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+}
+
+.animate-fade {
+  animation: fadeIn 0.6s ease-out forwards;
+}
+
+.animate-scale {
+  animation: scaleIn 0.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* ========== Flex Utility Classes ========== */
+.flex { display: flex; }
+.flex-column { display: flex; flex-direction: column; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; }
+.flex-wrap { display: flex; flex-wrap: wrap; }
+.flex-1 { flex: 1; }
+.align-center { align-items: center; }
+.justify-center { justify-content: center; }
+
+/* ========== Spacing Utility Classes ========== */
+.m-xs { margin: var(--spacing-xs); }
+.m-sm { margin: var(--spacing-sm); }
+.m-md { margin: var(--spacing-md); }
+.m-lg { margin: var(--spacing-lg); }
+.p-xs { padding: var(--spacing-xs); }
+.p-sm { padding: var(--spacing-sm); }
+.p-md { padding: var(--spacing-md); }
+.p-lg { padding: var(--spacing-lg); }
+
+.mt-xs { margin-top: var(--spacing-xs); }
+.mt-sm { margin-top: var(--spacing-sm); }
+.mt-md { margin-top: var(--spacing-md); }
+.mt-lg { margin-top: var(--spacing-lg); }
+
+.mb-xs { margin-bottom: var(--spacing-xs); }
+.mb-sm { margin-bottom: var(--spacing-sm); }
+.mb-md { margin-bottom: var(--spacing-md); }
+.mb-lg { margin-bottom: var(--spacing-lg); }
+
+/* ========== Text Utility Classes ========== */
+.text-center { text-align: center; }
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-hint { color: var(--color-text-hint); }
+.text-white { color: #FFFFFF; }
+.text-bold { font-weight: 800; }
+.text-sm { font-size: var(--font-size-sm); }
+.text-md { font-size: var(--font-size-md); }
+.text-lg { font-size: var(--font-size-lg); }
+.text-xl { font-size: var(--font-size-xl); }
+.text-xxl { font-size: var(--font-size-xxl); }
+
+/* ========== Border Radius ========== */
+.radius-sm { border-radius: var(--radius-sm); }
+.radius-md { border-radius: var(--radius-md); }
+.radius-lg { border-radius: var(--radius-lg); }
+.radius-round { border-radius: var(--radius-round); }
+
+/* ========== Shadow ========== */
+.shadow-soft { box-shadow: var(--shadow-soft); }
+.shadow-card { box-shadow: var(--shadow-card); }
+
+/* ========== Width & Height ========== */
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+/* ========== Overflow ========== */
+.overflow-hidden { overflow: hidden; }
+.text-ellipsis { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+/* ========== Safe Area ========== */
+.safe-bottom {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* ========== Custom Scrollbar Hide ========== */
+::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  color: transparent;
+}

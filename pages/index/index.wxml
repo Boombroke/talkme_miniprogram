@@ -1,0 +1,96 @@
+<view class="index-page">
+  <nav-bar custom show-back="{{false}}">
+    <view class="nav-home-row">
+      <view class="nav-brand">
+        <text class="nav-brand-name">TalkMe</text>
+        <text class="nav-brand-slogan">Your English Tutor</text>
+      </view>
+      <view class="nav-actions">
+        <view class="streak-pill" bindtap="goToCheckin">
+          <text class="streak-emoji" style="font-size:{{streakFlame.navSize}}rpx;">{{streakFlame.emoji}}</text>
+          <text class="streak-num">{{stats.consecutiveDays || 0}}天</text>
+        </view>
+        <view class="nav-divider"></view>
+        <view class="difficulty-pill" bindtap="onChangeDifficulty">
+          <text>{{difficultyText}} ▾</text>
+        </view>
+      </view>
+    </view>
+  </nav-bar>
+
+  <!-- Daily Sentence -->
+  <view class="daily-quote animate-fade stagger-1" wx:if="{{dailySentence}}">
+    <text class="daily-quote-mark">"</text>
+    <text class="daily-quote-en">{{dailySentence.en}}</text>
+    <view class="daily-quote-divider"></view>
+    <text class="daily-quote-zh">{{dailySentence.zh}}</text>
+  </view>
+
+  <!-- Mode Grid -->
+  <view class="mode-grid">
+    <!-- 影子跟读 — 全宽大卡 -->
+    <view class="mode-card mode-full mode-bg-shadow animate-spring stagger-2" bindtap="goToShadow">
+      <view class="mode-full-glow"></view>
+      <view class="mode-full-info">
+        <text class="mode-full-title">影子跟读</text>
+        <text class="mode-full-desc">一句话跟读，随时练习</text>
+      </view>
+      <image class="mode-icon" src="/images/icons/mode-shadow.png" mode="aspectFit" />
+    </view>
+
+    <!-- 每日挑战 — 全宽大卡 -->
+    <view class="mode-card mode-full mode-bg-challenge animate-spring stagger-2" bindtap="goToChallenge">
+      <view class="mode-full-glow"></view>
+      <view class="mode-full-info">
+        <text class="mode-full-title">每日挑战</text>
+        <text class="mode-full-desc">限时口语，冲排行榜</text>
+      </view>
+      <image class="mode-icon" src="/images/icons/mode-challenge.png" mode="aspectFit" />
+    </view>
+
+    <!-- 两列网格 -->
+    <view class="mode-row">
+      <view class="mode-card mode-half mode-bg-chat animate-scale stagger-3" bindtap="goToChat">
+        <view class="mode-half-info">
+          <text class="mode-half-title">自由对话</text>
+          <text class="mode-half-desc">与 AI 自由英语聊天</text>
+        </view>
+        <image class="mode-icon-corner" src="/images/icons/mode-chat.png" mode="aspectFit" />
+      </view>
+      <view class="mode-card mode-half mode-bg-scene animate-scale stagger-3" bindtap="goToSceneList">
+        <view class="mode-half-info">
+          <text class="mode-half-title">情景实战</text>
+          <text class="mode-half-desc">咖啡店、面试等实战</text>
+        </view>
+        <image class="mode-icon-corner" src="/images/icons/mode-scene.png" mode="aspectFit" />
+      </view>
+    </view>
+
+    <view class="mode-row">
+      <view class="mode-card mode-half mode-bg-topic animate-scale stagger-4" bindtap="goToTopic">
+        <view class="mode-half-info">
+          <text class="mode-half-title">话题挑战</text>
+          <text class="mode-half-desc">选题限时口语独白</text>
+        </view>
+        <image class="mode-icon-corner" src="/images/icons/mode-topic.png" mode="aspectFit" />
+      </view>
+      <view class="mode-card mode-half mode-bg-grammar animate-scale stagger-4" bindtap="goToGrammar">
+        <view class="mode-half-info">
+          <text class="mode-half-title">语法专练</text>
+          <text class="mode-half-desc">AI 出题，灵活判分</text>
+        </view>
+        <image class="mode-icon-corner" src="/images/icons/mode-grammar.png" mode="aspectFit" />
+      </view>
+    </view>
+
+    <!-- 词汇闪卡 — 全宽矮卡 -->
+    <view class="mode-card mode-full mode-full-compact mode-bg-vocab animate-spring stagger-4" bindtap="goToVocab">
+      <view class="mode-full-info">
+        <text class="mode-full-title">词汇闪卡</text>
+        <text class="mode-full-desc">学词造句，AI 评判</text>
+      </view>
+      <image class="mode-icon" src="/images/icons/mode-vocab.png" mode="aspectFit" />
+    </view>
+  </view>
+
+</view>

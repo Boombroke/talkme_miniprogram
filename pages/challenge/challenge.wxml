@@ -1,0 +1,190 @@
+<view class="challenge-page">
+  <nav-bar title="口语挑战赛" />
+
+  <!-- Stage: Intro -->
+  <block wx:if="{{stage === 'intro'}}">
+    <view class="intro-container">
+      <view class="trophy-header">
+        <text class="trophy-icon">🏆</text>
+        <text class="trophy-title">每日口语挑战</text>
+        <text class="trophy-sub">Daily Speaking Challenge</text>
+      </view>
+
+      <view class="topic-card shadow-card" wx:if="{{dailyTopic}}">
+        <view class="topic-emoji">{{dailyTopic.emoji}}</view>
+        <text class="topic-en">{{dailyTopic.topic}}</text>
+        <text class="topic-zh">{{dailyTopic.zh}}</text>
+        <view class="topic-meta">
+          <van-tag type="primary" round>{{dailyTopic.timeLimit}}秒</van-tag>
+          <text class="topic-day">今日话题</text>
+        </view>
+      </view>
+
+      <view class="intro-actions">
+        <van-button
+          type="danger"
+          round
+          block
+          size="large"
+          disabled="{{hasCompleted}}"
+          bindtap="startChallenge"
+        >
+          {{hasCompleted ? '今日已完成 ✅' : '开始挑战 🎤'}}
+        </van-button>
+
+        <view class="leaderboard-link" bindtap="showLeaderboard">
+          <text>🏅 查看排行榜</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- Stage: Recording -->
+  <block wx:elif="{{stage === 'recording'}}">
+    <view class="recording-container">
+      <view class="timer-circle">
+        <view class="timer-pulse"></view>
+        <view class="timer-inner">
+          <text class="timer-number">{{recordTime}}</text>
+          <text class="timer-unit">/ {{dailyTopic.timeLimit}}s</text>
+        </view>
+      </view>
+
+      <text class="recording-topic">{{dailyTopic.topic}}</text>
+      <text class="recording-hint">正在录音中，请大声说出你的回答...</text>
+
+      <van-button
+        type="danger"
+        round
+        size="large"
+        bindtap="stopRecording"
+        custom-class="stop-btn"
+      >
+        停止录音 ⏹
+      </van-button>
+    </view>
+  </block>
+
+  <!-- Stage: Evaluating -->
+  <block wx:elif="{{stage === 'evaluating'}}">
+    <view class="evaluating-container">
+      <van-loading size="60px" color="#FF6B6B" />
+      <text class="evaluating-text">AI 正在评估你的表现...</text>
+      <text class="evaluating-sub">请稍候片刻</text>
+    </view>
+  </block>
+
+  <!-- Stage: Result -->
+  <block wx:elif="{{stage === 'result'}}">
+    <!-- Confetti Animation for High Score -->
+    <view class="confetti-container" wx:if="{{evaluation && evaluation.overall >= 80}}">
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+      <view class="confetti-piece"></view>
+    </view>
+
+    <view class="result-container" wx:if="{{evaluation}}">
+      <view class="result-score-circle">
+        <text class="result-score-emoji">{{evaluation.overall >= 80 ? '🎉' : (evaluation.overall >= 60 ? '👏' : '💪')}}</text>
+        <text class="result-score-num">{{evaluation.overall}}</text>
+        <text class="result-score-label">综合得分</text>
+      </view>
+
+      <view class="result-dimensions">
+        <view class="dim-item">
+          <text class="dim-label">内容相关</text>
+          <van-progress percentage="{{evaluation.relevance}}" color="#FF6B6B" stroke-width="8" show-pivot />
+        </view>
+        <view class="dim-item">
+          <text class="dim-label">语法准确</text>
+          <van-progress percentage="{{evaluation.grammar}}" color="#FECA57" stroke-width="8" show-pivot />
+        </view>
+        <view class="dim-item">
+          <text class="dim-label">词汇丰富</text>
+          <van-progress percentage="{{evaluation.vocabulary}}" color="#10AC84" stroke-width="8" show-pivot />
+        </view>
+        <view class="dim-item">
+          <text class="dim-label">流利程度</text>
+          <van-progress percentage="{{evaluation.fluency}}" color="#54A0FF" stroke-width="8" show-pivot />
+        </view>
+      </view>
+
+      <view class="result-spoken" wx:if="{{evaluation.spokenText}}">
+        <text class="spoken-label">你说的内容：</text>
+        <text class="spoken-text">{{evaluation.spokenText}}</text>
+      </view>
+
+      <view class="result-feedback" wx:if="{{evaluation.feedback}}">
+        <text class="feedback-text">💡 {{evaluation.feedback}}</text>
+        <view class="play-btn {{playingTextId === 'feedback' ? 'playing' : ''}}" data-text="{{evaluation.feedback}}" data-id="feedback" bindtap="playText">🔊</view>
+      </view>
+
+      <view class="result-encouragement" wx:if="{{evaluation.encouragement}}">
+        <text class="encouragement-text">{{evaluation.encouragement}}</text>
+        <view class="play-btn {{playingTextId === 'encouragement' ? 'playing' : ''}}" data-text="{{evaluation.encouragement}}" data-id="encouragement" bindtap="playText">🔊</view>
+      </view>
+
+      <view class="result-actions">
+        <van-button type="warning" round block bindtap="showLeaderboard">
+          🏅 查看排行榜
+        </van-button>
+        <van-button round block bindtap="goHome" custom-style="margin-top: 20rpx;">
+          返回首页
+        </van-button>
+      </view>
+    </view>
+  </block>
+
+  <!-- Stage: Leaderboard -->
+  <block wx:elif="{{stage === 'leaderboard'}}">
+    <view class="leaderboard-container">
+      <view class="lb-header">
+        <text class="lb-title">🏅 今日排行榜</text>
+        <text class="lb-sub">Today's Leaderboard</text>
+      </view>
+
+      <view class="lb-list" wx:if="{{leaderboard.length}}">
+        <view
+          class="lb-item {{item.isMe ? 'lb-item-me' : ''}} {{item.rank <= 3 ? 'lb-top' : ''}}"
+          wx:for="{{leaderboard}}"
+          wx:key="rank"
+        >
+          <view class="lb-rank">
+            <text wx:if="{{item.rank === 1}}" class="lb-medal">🥇</text>
+            <text wx:elif="{{item.rank === 2}}" class="lb-medal">🥈</text>
+            <text wx:elif="{{item.rank === 3}}" class="lb-medal">🥉</text>
+            <text wx:else class="lb-rank-num">{{item.rank}}</text>
+          </view>
+          <text class="lb-name">{{item.nickName}}</text>
+          <text class="lb-score">{{item.score}}分</text>
+        </view>
+      </view>
+
+      <view class="lb-empty" wx:else>
+        <text>暂无排行数据，快来成为第一名吧！</text>
+      </view>
+
+      <van-button round block bindtap="backToResult" custom-style="margin-top: 40rpx;">
+        返回
+      </van-button>
+    </view>
+  </block>
+
+</view>

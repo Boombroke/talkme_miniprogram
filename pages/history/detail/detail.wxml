@@ -1,0 +1,63 @@
+<view class="detail-page">
+  <nav-bar title="对话详情" />
+  <!-- Loading -->
+  <view class="loading-wrap" wx:if="{{isLoading}}">
+    <van-loading size="24px" type="spinner" color="#FF6B6B" vertical>加载对话中...</van-loading>
+  </view>
+
+  <block wx:if="{{!isLoading && conversation}}">
+    <!-- Conversation Info Bar -->
+    <view class="info-container animate-fade-in">
+      <view class="info-card">
+        <view class="info-title">
+          <van-tag color="#FFF0E6" text-color="#FF6B6B" size="large" round custom-class="mode-tag">
+            {{conversation.mode === 'free' ? '自由对话' : '情景对话'}}
+          </van-tag>
+        </view>
+        <view class="info-time">
+          <text class="time-icon">🕒</text>
+          <text>{{conversation.createTime}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Messages (read-only) -->
+    <view class="messages-section animate-fade-in" style="animation-delay: 0.1s">
+      <block wx:for="{{messages}}" wx:key="index">
+        <chat-bubble
+          role="{{item.role}}"
+          content="{{item.content}}"
+        />
+      </block>
+    </view>
+
+    <!-- Evaluation Section -->
+    <view class="eval-section animate-fade-in" style="animation-delay: 0.2s" wx:if="{{evaluation}}">
+      <van-divider contentPosition="center" customStyle="color: #FF6B6B; border-color: #FFF0E6; font-size: 26rpx; padding: 0 48rpx; margin: 64rpx 0 40rpx;">
+        <view class="divider-content">
+          <text class="divider-icon">📊</text>
+          <text>对话评估报告</text>
+        </view>
+      </van-divider>
+      
+      <view class="eval-card">
+        <score-card
+          score="{{evaluation.totalScore}}"
+          pronunciation="{{evaluation.pronunciation}}"
+          grammar="{{evaluation.grammar}}"
+          fluency="{{evaluation.fluency}}"
+          vocabulary="{{evaluation.vocabulary}}"
+          showDetail="{{true}}"
+        />
+      </view>
+    </view>
+  </block>
+
+  <!-- Empty state -->
+  <view class="empty-wrap animate-fade-in" wx:if="{{!isLoading && !conversation}}">
+    <van-empty 
+      image="error" 
+      description="记录不存在或已被删除" 
+    />
+  </view>
+</view>

@@ -1,0 +1,172 @@
+@import "../../styles/variables.wxss";
+
+.collection-page {
+  min-height: 100vh;
+  background: var(--color-bg-primary);
+  padding-bottom: calc(env(safe-area-inset-bottom) + var(--spacing-lg));
+}
+
+/* Filter Tabs */
+.filter-tabs {
+  display: flex;
+  padding: var(--spacing-md);
+  gap: var(--spacing-sm);
+  background: var(--color-bg-white);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.filter-tab {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: var(--color-bg-primary);
+  transition: all 0.3s ease;
+}
+
+.filter-tab.active {
+  background: rgba(255, 107, 107, 0.15);
+  color: var(--color-primary);
+}
+
+/* Loading */
+.loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.loading-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-hint);
+  margin-top: var(--spacing-sm);
+}
+
+/* Empty State */
+.empty-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+}
+
+.empty-icon {
+  font-size: 120rpx;
+  margin-bottom: var(--spacing-md);
+}
+
+.empty-text {
+  font-size: var(--font-size-lg);
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.empty-hint {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-hint);
+}
+
+/* Collection List */
+.collection-list {
+  height: calc(100vh - 120rpx);
+  padding: 0 var(--spacing-md);
+}
+
+/* Collection Card */
+.collection-card {
+  background: var(--color-bg-white);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  margin-top: var(--spacing-sm);
+  box-shadow: var(--shadow-card);
+  border-left: 8rpx solid var(--color-primary);
+  transition: all 0.3s ease;
+}
+
+.collection-card.mastered {
+  border-left-color: var(--color-success);
+  opacity: 0.85;
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-sm);
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6rpx 16rpx;
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+}
+
+.role-ai {
+  background: rgba(255, 107, 107, 0.12);
+  color: var(--color-primary);
+}
+
+.role-user {
+  background: rgba(16, 172, 132, 0.12);
+  color: var(--color-success);
+}
+
+.card-source {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-hint);
+  font-weight: 600;
+}
+
+/* Card Content */
+.card-content {
+  margin-bottom: var(--spacing-sm);
+}
+
+.content-text {
+  font-size: var(--font-size-md);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+/* Card Actions */
+.card-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  border-top: 2rpx solid var(--color-border);
+  padding-top: var(--spacing-sm);
+}
+
+.action-btn {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  padding: 8rpx 16rpx;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.action-btn:active {
+  background: var(--color-bg-primary);
+}
+
+.mastered-btn.is-mastered {
+  color: var(--color-success);
+}
+
+.delete-btn {
+  margin-left: auto;
+  color: var(--color-danger);
+}

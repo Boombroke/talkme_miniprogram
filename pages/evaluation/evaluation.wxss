@@ -1,0 +1,115 @@
+.eval-page {
+  min-height: 100vh;
+  background: #F8F9FA;
+  padding: 32rpx;
+}
+
+.loading-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 200rpx;
+  gap: 24rpx;
+}
+
+.loading-text {
+  font-size: 26rpx;
+  color: #B2BEC3;
+}
+
+.empty-wrap {
+  padding-top: 120rpx;
+}
+
+.eval-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24rpx;
+}
+
+.eval-card {
+  background: #FFFFFF;
+  border-radius: 32rpx;
+  padding: 32rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.04);
+}
+
+.eval-card:active {
+  transform: scale(0.98);
+  transition: transform 0.15s ease;
+}
+
+.eval-card-top {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+
+.eval-score-big {
+  font-size: 64rpx;
+  font-weight: 900;
+  margin-right: 32rpx;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1;
+}
+
+.eval-meta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+
+.eval-date {
+  font-size: 24rpx;
+  color: #B2BEC3;
+  font-weight: 600;
+}
+
+.eval-mode-tag {
+  align-self: flex-start;
+}
+
+.eval-dims {
+  display: flex;
+  flex-direction: column;
+  gap: 16rpx;
+}
+
+.eval-dim {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.dim-name {
+  font-size: 22rpx;
+  color: #636E72;
+  font-weight: 600;
+  width: 60rpx;
+  flex-shrink: 0;
+}
+
+.dim-bar-track {
+  flex: 1;
+  height: 12rpx;
+  background: #F0F0F0;
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+
+.dim-bar-fill {
+  height: 100%;
+  border-radius: 6rpx;
+  transition: width 0.5s ease;
+}
+
+.dim-val {
+  font-size: 22rpx;
+  color: #2D3436;
+  font-weight: 700;
+  width: 48rpx;
+  text-align: right;
+  flex-shrink: 0;
+}

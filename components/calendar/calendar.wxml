@@ -1,0 +1,32 @@
+<view class="calendar">
+  <!-- Month Header -->
+  <view class="calendar-header">
+    <view class="nav-btn prev-btn" bindtap="prevMonth">
+      <text class="nav-emoji">◀️</text>
+    </view>
+    <text class="month-title">{{monthStr}}</text>
+    <view class="nav-btn next-btn" bindtap="nextMonth">
+      <text class="nav-emoji">▶️</text>
+    </view>
+  </view>
+
+  <!-- Weekday Headers -->
+  <view class="weekdays">
+    <view class="weekday" wx:for="{{weekdays}}" wx:key="*this">
+      <text class="weekday-text">{{item}}</text>
+    </view>
+  </view>
+
+  <!-- Days Grid -->
+  <view class="days-grid">
+    <view
+      class="day-cell {{item.empty ? 'empty' : ''}} {{item.isToday ? 'today' : ''}} {{item.isCheckedIn ? 'checked-in' : ''}} {{item.isFuture ? 'future' : ''}}"
+      wx:for="{{days}}"
+      wx:key="index"
+      data-date="{{item.date}}"
+      bindtap="onDayTap"
+    >
+      <text class="day-number" wx:if="{{!item.empty}}">{{item.day}}</text>
+    </view>
+  </view>
+</view>

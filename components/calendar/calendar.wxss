@@ -1,0 +1,143 @@
+.calendar {
+  background: #FFFFFF;
+  border-radius: 40rpx;
+  padding: 40rpx 32rpx;
+  box-shadow: 0 16rpx 48rpx rgba(255, 107, 107, 0.08);
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16rpx 16rpx 40rpx;
+}
+
+.nav-btn {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24rpx;
+  background: #FFF0E6;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+  background: #FFE0CC;
+}
+
+.nav-emoji {
+  font-size: 36rpx;
+  line-height: 1;
+}
+
+.month-title {
+  font-size: 44rpx;
+  font-weight: 800;
+  color: #2D3436;
+  letter-spacing: 2rpx;
+}
+
+.weekdays {
+  display: flex;
+  margin-bottom: 24rpx;
+}
+
+.weekday {
+  flex: 1;
+  text-align: center;
+  padding: 16rpx 0;
+}
+
+.weekday-text {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: #B2BEC3;
+  text-transform: uppercase;
+}
+
+.days-grid {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.day-cell {
+  width: 14.28%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16rpx 0;
+  position: relative;
+  min-height: 100rpx;
+  margin-bottom: 16rpx;
+}
+
+.day-cell.empty {
+  visibility: hidden;
+}
+
+.day-cell.future {
+  opacity: 0.3;
+}
+
+.day-number {
+  font-size: 32rpx;
+  color: #636E72;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  z-index: 2;
+}
+
+/* Today styles - Outlined Coral */
+.day-cell.today .day-number {
+  color: #FF6B6B;
+  font-weight: 800;
+}
+
+.day-cell.today::before {
+  content: '';
+  position: absolute;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  border: 4rpx solid #FF6B6B;
+  box-sizing: border-box;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+/* Checked-in styles - Filled Coral Gradient */
+.day-cell.checked-in .day-number {
+  color: #FFFFFF;
+  font-weight: 800;
+}
+
+.day-cell.checked-in::before {
+  content: '';
+  position: absolute;
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF6B6B, #FF9F43);
+  box-shadow: 0 8rpx 24rpx rgba(255, 107, 107, 0.4);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* If it's both today AND checked in */
+.day-cell.today.checked-in::before {
+  border: none;
+}
+
+@keyframes popIn {
+  from { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+  to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+}

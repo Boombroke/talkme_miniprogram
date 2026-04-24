@@ -1,0 +1,100 @@
+<view class="history-page">
+  <nav-bar title="练习记录" show-back="{{false}}" />
+  <!-- Search Bar -->
+  <van-sticky>
+    <view class="search-wrapper">
+      <van-search
+        value="{{searchText}}"
+        shape="round"
+        background="transparent"
+        placeholder="搜索练习记录"
+        bind:change="onSearch"
+        class="custom-search"
+      />
+    </view>
+
+    <!-- Filter Tabs -->
+    <view class="filter-container">
+      <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
+        <view class="filter-tabs">
+          <view class="tab {{currentFilter === 'all' ? 'active' : ''}}" data-filter="all" bindtap="onFilterChange">
+            <text>全部</text>
+          </view>
+          <view class="tab {{currentFilter === 'shadow' ? 'active' : ''}}" data-filter="shadow" bindtap="onFilterChange">
+            <text>🔁 跟读</text>
+          </view>
+          <view class="tab {{currentFilter === 'free' ? 'active' : ''}}" data-filter="free" bindtap="onFilterChange">
+            <text>💬 对话</text>
+          </view>
+          <view class="tab {{currentFilter === 'scene' ? 'active' : ''}}" data-filter="scene" bindtap="onFilterChange">
+            <text>☕ 场景</text>
+          </view>
+          <view class="tab {{currentFilter === 'topic' ? 'active' : ''}}" data-filter="topic" bindtap="onFilterChange">
+            <text>🎯 话题</text>
+          </view>
+          <view class="tab {{currentFilter === 'grammar' ? 'active' : ''}}" data-filter="grammar" bindtap="onFilterChange">
+            <text>📝 语法</text>
+          </view>
+          <view class="tab {{currentFilter === 'vocab' ? 'active' : ''}}" data-filter="vocab" bindtap="onFilterChange">
+            <text>🎲 词汇</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </van-sticky>
+
+  <!-- Conversation List -->
+  <view class="conversation-list">
+    <block wx:for="{{filteredConversations}}" wx:key="_id">
+      <view class="conversation-card animate-fade-in" style="animation-delay: {{index * 0.05}}s" data-id="{{item._id}}" bindtap="goToDetail">
+        <van-cell custom-class="conv-cell" border="{{false}}">
+          <!-- Custom Header -->
+          <view slot="title" class="conv-header">
+            <view class="conv-tags">
+              <van-tag color="#FFF0E6" text-color="#FF6B6B" round custom-class="mode-tag">{{item.modeText}}</van-tag>
+              <van-tag color="#FFF0E6" text-color="#FF9F43" round custom-class="scene-tag" wx:if="{{item.sceneName}}">{{item.sceneName}}</van-tag>
+            </view>
+            <text class="conv-time">{{item.timeStr}}</text>
+          </view>
+          
+          <!-- Custom Content -->
+          <view slot="label" class="conv-content">
+            <text class="conv-preview van-multi-ellipsis--l2">{{item.preview || '暂无内容'}}</text>
+            <view class="conv-footer">
+              <view class="footer-left">
+                <text class="chat-icon">💬</text>
+                <text class="conv-count">{{item.messageCount || 0}}条消息</text>
+              </view>
+              <view class="footer-right" wx:if="{{item.score}}">
+                <van-tag color="#E8F8F5" text-color="#10AC84" round custom-class="score-tag">
+                  评分: {{item.score}}
+                </van-tag>
+              </view>
+            </view>
+          </view>
+        </van-cell>
+      </view>
+    </block>
+  </view>
+
+  <!-- Empty State -->
+  <view class="empty-wrap animate-fade-in" wx:if="{{isEmpty && !isLoading}}">
+    <van-empty 
+      class="custom-empty"
+      image="search"
+      description="暂无练习记录" 
+    />
+  </view>
+
+  <!-- Loading -->
+  <view class="loading-wrap" wx:if="{{isLoading}}">
+    <van-loading size="24px" type="spinner" color="#FF6B6B">加载中...</van-loading>
+  </view>
+
+  <!-- No More -->
+  <view class="no-more-wrap animate-fade-in" wx:if="{{!hasMore && conversations.length && !isLoading}}">
+    <van-divider contentPosition="center" customStyle="color: #B2BEC3; border-color: #DFE6E9; font-size: 24rpx; padding: 0 48rpx;">
+      没有更多记录了
+    </van-divider>
+  </view>
+</view>

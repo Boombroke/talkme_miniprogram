@@ -1,0 +1,11 @@
+{
+  "usingComponents": {
+    "chat-bubble": "/components/chat-bubble/chat-bubble",
+    "score-card": "/components/score-card/score-card",
+    "van-loading": "../../../miniprogram_npm/@vant/weapp/loading/index",
+    "van-tag": "../../../miniprogram_npm/@vant/weapp/tag/index",
+    "van-divider": "../../../miniprogram_npm/@vant/weapp/divider/index",
+    "van-empty": "../../../miniprogram_npm/@vant/weapp/empty/index"
+  },
+  "navigationBarTitleText": "对话详情"
+}

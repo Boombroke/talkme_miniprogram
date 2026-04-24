@@ -1,0 +1,42 @@
+<view class="scene-page">
+  <nav-bar title="情景对话" />
+  <view class="page-header animate-fade-in">
+    <text class="header-title">选择练习场景 🎬</text>
+    <text class="header-desc">选择一个生活场景，与AI进行角色扮演对话</text>
+  </view>
+
+  <view class="scene-list">
+    <view
+      class="scene-card animate-stagger"
+      style="animation-delay: {{index * 0.1}}s"
+      wx:for="{{scenes}}"
+      wx:key="id"
+      data-id="{{item.id}}"
+      bindtap="goToDetail"
+    >
+      <view class="scene-icon-wrap" style="background: {{item.bgColor || '#FFF0E6'}}">
+        <text class="scene-icon">{{item.icon}}</text>
+      </view>
+      <view class="scene-info">
+        <view class="scene-name-row">
+          <text class="scene-name">{{item.name}}</text>
+          <text class="scene-name-en">{{item.nameEn}}</text>
+        </view>
+        <text class="scene-desc">{{item.desc}}</text>
+        <view class="scene-meta">
+          <van-tag 
+            color="{{item.difficultyLevel === 1 ? '#10AC84' : '#FF9F43'}}" 
+            custom-class="difficulty-tag"
+            round
+          >
+            {{item.difficulty}}
+          </van-tag>
+          <text class="ai-role">AI角色：{{item.aiRole}}</text>
+        </view>
+      </view>
+      <view class="scene-arrow">
+        <van-icon name="arrow" color="#FF9F43" size="20px" />
+      </view>
+    </view>
+  </view>
+</view>

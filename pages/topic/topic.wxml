@@ -1,0 +1,224 @@
+<wxs src="../../utils/score.wxs" module="scoreHelper" />
+<view class="topic-page">
+  <nav-bar title="话题挑战" />
+
+  <!-- ========== STAGE: PICK ========== -->
+  <view class="stage-pick" wx:if="{{stage === 'pick'}}">
+    <view class="pick-header animate-spring">
+      <text class="pick-emoji">🎯</text>
+      <text class="pick-title">选择一个话题</text>
+      <text class="pick-subtitle">Choose a topic and speak about it</text>
+    </view>
+
+    <view class="topic-grid">
+      <view
+        class="topic-card shadow-card animate-spring"
+        wx:for="{{topics}}"
+        wx:key="id"
+        style="animation-delay: {{index * 0.1}}s"
+        bindtap="pickTopic"
+        data-id="{{item.id}}"
+      >
+        <view class="topic-card-emoji">{{item.emoji}}</view>
+        <view class="topic-card-text">{{item.text}}</view>
+        <view class="topic-card-zh">{{item.zh}}</view>
+        <view class="topic-card-diff">
+          <text class="diff-dot diff-{{item.difficulty}}"></text>
+          <text class="diff-label">{{item.difficulty}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- ========== STAGE: PREP ========== -->
+  <view class="stage-prep" wx:elif="{{stage === 'prep'}}">
+    <view class="prep-topic-card animate-scale">
+      <text class="prep-emoji">{{currentTopic.emoji}}</text>
+      <text class="prep-topic-text">{{currentTopic.text}}</text>
+      <text class="prep-topic-zh">{{currentTopic.zh}}</text>
+    </view>
+
+    <view class="countdown-wrap animate-bounce">
+      <view class="countdown-circle">
+        <text class="countdown-number">{{prepCountdown}}</text>
+        <text class="countdown-unit">秒准备</text>
+      </view>
+    </view>
+
+    <text class="prep-hint">Take a moment to organize your thoughts...</text>
+
+    <view class="prep-actions">
+      <van-button
+        type="primary"
+        round
+        block
+        custom-class="btn-ready"
+        bind:click="startRecording"
+      >
+        <view class="btn-inner">
+          <text class="btn-icon">🎙️</text>
+          <text>I'm Ready!</text>
+        </view>
+      </van-button>
+    </view>
+  </view>
+
+  <!-- ========== STAGE: RECORDING ========== -->
+  <view class="stage-recording" wx:elif="{{stage === 'recording'}}">
+    <view class="recording-topic">
+      <text class="recording-topic-text">{{currentTopic.text}}</text>
+    </view>
+
+    <view class="mic-wrap animate-bounce">
+      <view class="mic-pulse-ring ring-1"></view>
+      <view class="mic-pulse-ring ring-2"></view>
+      <view class="mic-pulse-ring ring-3"></view>
+      <view class="mic-btn">
+        <text class="mic-icon">🎙️</text>
+      </view>
+    </view>
+
+    <view class="record-countdown-wrap">
+      <text class="record-countdown-number">{{recordCountdown}}</text>
+      <text class="record-countdown-label">秒</text>
+    </view>
+
+    <text class="recording-hint">正在录音，请大声说英语...</text>
+
+    <view class="recording-actions">
+      <van-button
+        type="danger"
+        round
+        block
+        custom-class="btn-stop"
+        bind:click="stopRecording"
+      >
+        <view class="btn-inner">
+          <text class="btn-icon">⏹️</text>
+          <text>完成录音</text>
+        </view>
+      </van-button>
+    </view>
+  </view>
+
+  <!-- ========== STAGE: EVALUATING ========== -->
+  <view class="stage-evaluating" wx:elif="{{stage === 'evaluating'}}">
+    <view class="evaluating-wrap">
+      <van-loading size="64rpx" color="#FF6B6B" />
+      <text class="evaluating-text">AI 正在评估你的表现...</text>
+      <text class="evaluating-sub">Analyzing your monologue</text>
+    </view>
+  </view>
+
+  <!-- ========== STAGE: RESULT ========== -->
+  <view class="stage-result" wx:elif="{{stage === 'result'}}">
+    <!-- Confetti Container -->
+    <view class="confetti-container" wx:if="{{evaluation.overall >= 80}}">
+      <view class="confetti" wx:for="{{20}}" wx:key="index" style="left: {{item * 5}}%; animation-delay: {{index * 0.1}}s; animation-duration: {{1 + index * 0.1}}s; background-color: {{index % 3 === 0 ? '#FF6B6B' : (index % 3 === 1 ? '#FF9F43' : '#10AC84')}};"></view>
+    </view>
+
+    <!-- Overall Score -->
+    <view class="result-score-card animate-bounce shadow-card">
+      <text class="result-score-emoji">{{evaluation.overall >= 80 ? '🎉' : (evaluation.overall >= 60 ? '👏' : '💪')}}</text>
+      <text class="result-score-number" style="color: {{scoreHelper.getScoreColor(evaluation.overall)}}">{{evaluation.overall}}</text>
+      <text class="result-score-label">综合评分</text>
+    </view>
+
+    <!-- Dimension Scores -->
+    <view class="result-dims-card animate-spring shadow-card">
+      <text class="dims-title">详细维度</text>
+
+      <view class="dim-row">
+        <text class="dim-name">话题相关</text>
+        <view class="dim-bar-track">
+          <view class="dim-bar-fill" style="width: {{evaluation.topicRelevance}}%; background: #FF6B6B;"></view>
+        </view>
+        <text class="dim-val">{{evaluation.topicRelevance}}</text>
+      </view>
+
+      <view class="dim-row">
+        <text class="dim-name">语法准确</text>
+        <view class="dim-bar-track">
+          <view class="dim-bar-fill" style="width: {{evaluation.grammar}}%; background: #FF9F43;"></view>
+        </view>
+        <text class="dim-val">{{evaluation.grammar}}</text>
+      </view>
+
+      <view class="dim-row">
+        <text class="dim-name">词汇丰富</text>
+        <view class="dim-bar-track">
+          <view class="dim-bar-fill" style="width: {{evaluation.vocabulary}}%; background: #FECA57;"></view>
+        </view>
+        <text class="dim-val">{{evaluation.vocabulary}}</text>
+      </view>
+
+      <view class="dim-row">
+        <text class="dim-name">流利连贯</text>
+        <view class="dim-bar-track">
+          <view class="dim-bar-fill" style="width: {{evaluation.fluency}}%; background: #10AC84;"></view>
+        </view>
+        <text class="dim-val">{{evaluation.fluency}}</text>
+      </view>
+    </view>
+
+    <!-- Spoken Text Preview -->
+    <view class="result-spoken-card animate-spring shadow-card" wx:if="{{evaluation.spokenText}}">
+      <text class="spoken-title">📝 你说的内容</text>
+      <text class="spoken-text">{{evaluation.spokenText}}</text>
+    </view>
+
+    <!-- Feedback -->
+    <view class="result-feedback-card animate-spring shadow-card">
+      <view class="card-header-flex">
+        <text class="feedback-title">💬 AI 反馈</text>
+        <view class="play-btn {{playingTextId === 'feedback' ? 'playing' : ''}}" bindtap="playText" data-id="feedback" data-text="{{evaluation.feedback}}">
+          <text class="play-icon">🔊</text>
+        </view>
+      </view>
+      <text class="feedback-text">{{evaluation.feedback}}</text>
+    </view>
+
+    <!-- Tips -->
+    <view class="result-tips-card animate-spring shadow-card" wx:if="{{evaluation.tips.length}}">
+      <text class="tips-title">💡 改进建议</text>
+      <view class="tip-item" wx:for="{{evaluation.tips}}" wx:key="index">
+        <text class="tip-index">{{index + 1}}</text>
+        <text class="tip-text">{{item}}</text>
+        <view class="play-btn tip-play-btn {{playingTextId === 'tip-' + index ? 'playing' : ''}}" bindtap="playText" data-id="tip-{{index}}" data-text="{{item}}">
+          <text class="play-icon">🔊</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- Encouragement -->
+    <view class="result-encouragement" wx:if="{{evaluation.encouragement}}">
+      <text class="encouragement-text">{{evaluation.encouragement}}</text>
+    </view>
+
+    <!-- Actions -->
+    <view class="result-actions">
+      <van-button
+        type="primary"
+        round
+        block
+        custom-class="btn-retry"
+        bind:click="tryAgain"
+      >
+        <view class="btn-inner">
+          <text class="btn-icon">🔄</text>
+          <text>再来一次</text>
+        </view>
+      </van-button>
+      <van-button
+        plain
+        round
+        block
+        custom-class="btn-home"
+        bind:click="goHome"
+      >
+        返回首页
+      </van-button>
+    </view>
+  </view>
+
+</view>

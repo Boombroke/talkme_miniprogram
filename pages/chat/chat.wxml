@@ -1,0 +1,112 @@
+<view class="chat-page">
+  <nav-bar title="对话练习" />
+  <!-- Messages List -->
+  <scroll-view
+    class="message-list"
+    scroll-y
+    scroll-into-view="{{scrollIntoView}}"
+    scroll-with-animation
+    enhanced
+    show-scrollbar="{{false}}"
+  >
+    <!-- Scene info banner -->
+    <van-transition show="{{mode === 'scene' && sceneName}}" name="slide-down" custom-class="scene-banner-wrapper">
+      <view class="scene-banner">
+        <text class="scene-icon">🎭</text>
+        <text class="scene-banner-text">场景：{{sceneName}}</text>
+      </view>
+    </van-transition>
+
+    <!-- Scene progress indicator -->
+    <view class="scene-progress" wx:if="{{mode === 'scene' && sceneProgress}}">
+      <view class="progress-bar">
+        <view class="progress-fill" style="width: {{sceneProgress / sceneTotalSteps * 100}}%"></view>
+      </view>
+      <text class="progress-text">{{sceneProgress}}/{{sceneTotalSteps}} 轮对话</text>
+    </view>
+
+    <view class="message-container">
+      <block wx:for="{{messages}}" wx:key="id">
+        <view id="{{item.id}}" class="message-item">
+          <chat-bubble
+            role="{{item.role}}"
+            content="{{item.content}}"
+            msgId="{{item.id}}"
+            isStreaming="{{item.isStreaming}}"
+            isTyping="{{item.isTyping || false}}"
+            sendFailed="{{item.sendFailed}}"
+            translatedText="{{item.translatedText || ''}}"
+            correction="{{item.correction || ''}}"
+            type="{{item.type || 'text'}}"
+            audioFileID="{{item.audioFileID || ''}}"
+            duration="{{item.duration || 0}}"
+            audioTempUrl="{{item.audioTempUrl || ''}}"
+            userAvatarUrl="{{userAvatarUrl}}"
+            aiAvatarEmoji="{{aiAvatarEmoji}}"
+            playingMsgId="{{playingMsgId}}"
+            playState="{{playState}}"
+            bindstreamend="onStreamEnd"
+            bindtts="onTTS"
+            bindretry="onRetryMessage"
+            bindtranslate="onTranslate"
+            bindcollect="onCollectMessage"
+          />
+        </view>
+      </block>
+
+      <!-- Loading indicator -->
+      <view class="loading-indicator" wx:if="{{isLoading}}">
+        <view class="loading-bubble">
+          <view class="bouncing-dots">
+            <view class="dot"></view>
+            <view class="dot"></view>
+            <view class="dot"></view>
+          </view>
+        </view>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- Bottom Input Area -->
+  <van-transition show="true" name="slide-up" custom-class="input-area safe-bottom">
+    <view class="input-container">
+      <!-- End conversation button -->
+      <view class="end-btn" bindtap="endConversation">
+        <text class="end-icon">👋</text>
+      </view>
+
+      <!-- Text/Voice switch -->
+      <view class="switch-btn {{inputMode === 'text' ? 'is-text' : 'is-voice'}}" bindtap="switchInputMode">
+        <text class="switch-icon">{{inputMode === 'text' ? '🎤' : '⌨️'}}</text>
+      </view>
+
+      <!-- Text input mode -->
+      <view class="text-input-wrap" wx:if="{{inputMode === 'text'}}">
+        <van-field
+          value="{{inputText}}"
+          placeholder="输入英文消息..."
+          border="{{false}}"
+          bind:change="onInput"
+          bind:confirm="sendTextMessage"
+          confirm-type="send"
+          custom-style="padding: 0; background-color: transparent;"
+          input-class="modern-text-input"
+          adjust-position="{{true}}"
+        />
+        <view class="send-btn-wrap">
+          <view 
+            class="modern-send-btn {{!inputText ? 'disabled' : ''}}"
+            bindtap="sendTextMessage"
+          >
+            发送
+          </view>
+        </view>
+      </view>
+
+      <!-- Voice input mode -->
+      <view class="voice-input-wrap" wx:else>
+        <voice-btn bindrecordend="onRecordEnd" disabled="{{isLoading}}" />
+      </view>
+    </view>
+  </van-transition>
+</view>

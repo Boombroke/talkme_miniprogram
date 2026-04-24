@@ -1,0 +1,8 @@
+{
+  "name": "talkme",
+  "version": "1.0.0",
+  "description": "互动式英语口语练习系统",
+  "dependencies": {
+    "@vant/weapp": "^1.11.6"
+  }
+}

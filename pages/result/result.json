@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "score-card": "/components/score-card/score-card",
+    "van-divider": "../../miniprogram_npm/@vant/weapp/divider/index",
+    "van-button": "../../miniprogram_npm/@vant/weapp/button/index"
+  },
+  "navigationBarTitleText": "评估结果"
+}

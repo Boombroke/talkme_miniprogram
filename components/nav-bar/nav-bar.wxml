@@ -1,0 +1,19 @@
+<view class="nav-bar" style="height:{{navBarHeight}}px;">
+  <view style="height:{{statusBarHeight}}px;"></view>
+  <view class="nav-content" style="height:{{navContentHeight}}px; padding-right:{{menuPadRight}}px;">
+    <!-- Custom slot mode (index page) -->
+    <block wx:if="{{custom}}">
+      <slot></slot>
+    </block>
+    <!-- Standard mode: back + title -->
+    <block wx:else>
+      <view class="nav-left">
+        <view wx:if="{{showBack}}" class="nav-back" bindtap="onBack">
+          <svg-icon name="back" size="{{40}}" color="#FFFFFF" />
+        </view>
+        <text class="nav-title">{{title}}</text>
+      </view>
+    </block>
+  </view>
+</view>
+<view style="height:{{navBarHeight}}px;"></view>
