@@ -377,6 +377,13 @@
   letter-spacing: 2rpx;
 }
 
+.compare-actions {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  flex-shrink: 0;
+}
+
 .play-btn-small {
   width: 56rpx;
   height: 56rpx;
@@ -508,6 +515,12 @@
   margin-bottom: 12rpx;
 }
 
+.result-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
 .result-round {
   font-size: 24rpx;
   color: #B2BEC3;
@@ -519,6 +532,23 @@
 .result-score {
   font-size: 32rpx;
   font-weight: 900;
+}
+
+.summary-collect-btn {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: #F8F9FA;
+  color: #FF9F43;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.summary-collect-btn:active {
+  transform: scale(0.9);
 }
 
 .text-green { color: #10AC84; }

@@ -1,4 +1,5 @@
 const api = require('../../utils/api');
+const auth = require('../../utils/auth');
 const { createPracticeTimer } = require('../../utils/practice-timer');
 const { showToast, shuffleCopy, avoidRecentFirst } = require('../../utils/util');
 
@@ -291,6 +292,28 @@ Page({
     } catch (err) {
       this.setData({ playingTTSId: null });
       console.error('TTS失败:', err);
+    }
+  },
+
+  async collectSentence(e) {
+    const content = (e.currentTarget.dataset.text || '').trim();
+    if (!content) return;
+    if (auth.requireAuth('收藏句子') !== 'allowed') return;
+
+    try {
+      await wx.cloud.callFunction({
+        name: 'login',
+        data: {
+          action: 'addCollection',
+          content,
+          role: 'assistant',
+          source: '影子跟读'
+        }
+      });
+      showToast('收藏成功');
+    } catch (err) {
+      console.error('收藏失败:', err);
+      showToast('收藏失败');
     }
   },
 

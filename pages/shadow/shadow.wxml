@@ -135,8 +135,13 @@
               <text class="compare-icon">📖</text>
               <text>Original</text>
             </view>
-            <view class="play-btn-small {{playingTTSId === 'original-' + currentIndex ? 'playing' : ''}}" bindtap="playFeedbackTTS" data-text="{{currentSentence}}" data-type="original">
-              🔊
+            <view class="compare-actions">
+              <view class="play-btn-small {{playingTTSId === 'original-' + currentIndex ? 'playing' : ''}}" bindtap="playFeedbackTTS" data-text="{{currentSentence}}" data-type="original">
+                🔊
+              </view>
+              <view class="play-btn-small" bindtap="collectSentence" data-text="{{currentSentence}}">
+                ☆
+              </view>
             </view>
           </view>
           <text class="compare-text original">{{currentSentence}}</text>
@@ -204,7 +209,10 @@
       <view class="result-item" wx:for="{{roundResults}}" wx:key="index">
         <view class="result-header">
           <text class="result-round">Round {{index + 1}}</text>
-          <text class="result-score {{item.scoreClass}}">{{item.similarity}}%</text>
+          <view class="result-header-actions">
+            <view class="summary-collect-btn" bindtap="collectSentence" data-text="{{item.original}}">☆</view>
+            <text class="result-score {{item.scoreClass}}">{{item.similarity}}%</text>
+          </view>
         </view>
         <text class="result-original">{{item.original}}</text>
         <text class="result-spoken">You: {{item.spoken}}</text>
