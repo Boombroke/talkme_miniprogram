@@ -53,17 +53,6 @@
           />
         </view>
       </block>
-
-      <!-- Loading indicator -->
-      <view class="loading-indicator" wx:if="{{isLoading}}">
-        <view class="loading-bubble">
-          <view class="bouncing-dots">
-            <view class="dot"></view>
-            <view class="dot"></view>
-            <view class="dot"></view>
-          </view>
-        </view>
-      </view>
     </view>
   </scroll-view>
 
