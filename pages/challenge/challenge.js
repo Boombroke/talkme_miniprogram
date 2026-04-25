@@ -1,4 +1,5 @@
 const api = require('../../utils/api');
+const { collectText } = require('../../utils/collection');
 const { createPracticeTimer } = require('../../utils/practice-timer');
 const { showToast } = require('../../utils/util');
 
@@ -204,6 +205,11 @@ Page({
       this.setData({ playingTextId: '' });
       showToast('语音播放失败');
     }
+  },
+
+  async collectChallengeText(e) {
+    const { text, role } = e.currentTarget.dataset;
+    await collectText(text, '每日挑战', role);
   },
 
   backToResult() {

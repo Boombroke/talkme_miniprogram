@@ -66,6 +66,51 @@
   margin-bottom: 16rpx;
 }
 
+.collect-line,
+.section-title-row,
+.inline-actions {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.collect-line {
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 16rpx;
+}
+
+.collect-line .topic-en {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.section-title-row {
+  justify-content: space-between;
+}
+
+.inline-actions {
+  flex-shrink: 0;
+}
+
+.collect-icon-btn {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: #F8F9FA;
+  color: #FF9F43;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.collect-icon-btn:active {
+  transform: scale(0.9);
+}
+
 .topic-zh {
   font-size: 28rpx;
   color: #636E72;

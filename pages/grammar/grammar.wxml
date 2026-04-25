@@ -25,12 +25,15 @@
     <view class="question-card shadow-card animate-scale">
       <!-- Type & Hint -->
       <view class="question-top">
-        <van-tag plain type="primary" custom-class="type-tag">
-          {{currentQuestion.type === 'fill-blank' ? '填空' : (currentQuestion.type === 'error-correction' ? '纠错' : '句型转换')}}
-        </van-tag>
-        <van-tag plain color="#FF9F43" custom-class="hint-tag" wx:if="{{currentQuestion.hint}}">
-          💡 {{currentQuestion.hint}}
-        </van-tag>
+        <view class="question-tags">
+          <van-tag plain type="primary" custom-class="type-tag">
+            {{currentQuestion.type === 'fill-blank' ? '填空' : (currentQuestion.type === 'error-correction' ? '纠错' : '句型转换')}}
+          </van-tag>
+          <van-tag plain color="#FF9F43" custom-class="hint-tag" wx:if="{{currentQuestion.hint}}">
+            💡 {{currentQuestion.hint}}
+          </van-tag>
+        </view>
+        <view class="collect-icon-btn" data-text="{{currentQuestion.sentence}}" catchtap="collectGrammarText">☆</view>
       </view>
 
       <!-- Instruction -->
@@ -116,24 +119,36 @@
     <view class="answer-compare-card shadow-card animate-spring">
       <view class="compare-row">
         <text class="compare-label">你的答案</text>
-        <text class="compare-value user-answer {{currentResult.isCorrect ? 'text-correct' : 'text-wrong'}}">{{currentResult.userAnswer}}</text>
+        <view class="compare-value-row">
+          <text class="compare-value user-answer {{currentResult.isCorrect ? 'text-correct' : 'text-wrong'}}">{{currentResult.userAnswer}}</text>
+          <view class="collect-icon-btn" data-text="{{currentResult.userAnswer}}" data-role="user" catchtap="collectGrammarText">☆</view>
+        </view>
       </view>
       <view class="compare-divider"></view>
       <view class="compare-row">
         <text class="compare-label">正确答案</text>
-        <text class="compare-value correct-answer">{{currentResult.question.answer}}</text>
+        <view class="compare-value-row">
+          <text class="compare-value correct-answer">{{currentResult.question.answer}}</text>
+          <view class="collect-icon-btn" data-text="{{currentResult.question.answer}}" catchtap="collectGrammarText">☆</view>
+        </view>
       </view>
     </view>
 
     <!-- Explanation -->
     <view class="explanation-card shadow-card animate-spring">
-      <text class="explanation-title">📖 语法解析</text>
+      <view class="card-title-row">
+        <text class="explanation-title">📖 语法解析</text>
+        <view class="collect-icon-btn" data-text="{{currentResult.question.explanation}}" catchtap="collectGrammarText">☆</view>
+      </view>
       <text class="explanation-text">{{currentResult.question.explanation}}</text>
     </view>
 
     <!-- Feedback -->
     <view class="feedback-card shadow-card animate-spring" wx:if="{{currentResult.feedback}}">
-      <text class="feedback-title">💬 AI 反馈</text>
+      <view class="card-title-row">
+        <text class="feedback-title">💬 AI 反馈</text>
+        <view class="collect-icon-btn" data-text="{{currentResult.feedback}}" catchtap="collectGrammarText">☆</view>
+      </view>
       <text class="feedback-text">{{currentResult.feedback}}</text>
     </view>
 
@@ -178,7 +193,10 @@
       >
         <view class="summary-item-header">
           <text class="summary-item-num">Q{{index + 1}}</text>
-          <text class="summary-item-icon">{{item.isCorrect ? '✅' : '❌'}}</text>
+          <view class="summary-item-actions">
+            <view class="collect-icon-btn" data-text="{{item.question.sentence}}" catchtap="collectGrammarText">☆</view>
+            <text class="summary-item-icon">{{item.isCorrect ? '✅' : '❌'}}</text>
+          </view>
         </view>
 
         <text class="summary-item-sentence">{{item.question.sentence}}</text>
@@ -186,7 +204,10 @@
         <view class="summary-item-answers">
           <view class="summary-answer-row">
             <text class="answer-label">你的：</text>
-            <text class="answer-val {{item.isCorrect ? 'text-correct' : 'text-wrong'}}">{{item.userAnswer}}</text>
+            <view class="answer-val-row">
+              <text class="answer-val {{item.isCorrect ? 'text-correct' : 'text-wrong'}}">{{item.userAnswer}}</text>
+              <view class="collect-icon-btn" data-text="{{item.userAnswer}}" data-role="user" catchtap="collectGrammarText">☆</view>
+            </view>
           </view>
           <view class="summary-answer-row" wx:if="{{!item.isCorrect}}">
             <text class="answer-label">正确：</text>

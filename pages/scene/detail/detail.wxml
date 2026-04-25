@@ -33,6 +33,7 @@
           <view slot="title" class="phrase-item">
             <text class="phrase-bullet">🔥</text>
             <text class="phrase-text">{{item}}</text>
+            <view class="collect-icon-btn" data-text="{{item}}" catchtap="collectSceneText">☆</view>
           </view>
         </van-cell>
       </van-cell-group>

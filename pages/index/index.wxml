@@ -20,6 +20,7 @@
 
   <!-- Daily Sentence -->
   <view class="daily-quote animate-fade stagger-1" wx:if="{{dailySentence}}">
+    <view class="daily-collect-btn" catchtap="collectDailySentence">☆</view>
     <text class="daily-quote-mark">"</text>
     <text class="daily-quote-en">{{dailySentence.en}}</text>
     <view class="daily-quote-divider"></view>

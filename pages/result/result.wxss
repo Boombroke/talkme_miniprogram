@@ -322,7 +322,8 @@
 .goals-list { margin-bottom: 20rpx; padding: 16rpx 24rpx; background: #F8F9FA; border-radius: 24rpx; }
 .goal-label { font-size: 28rpx; font-weight: 700; color: #2D3436; display: block; margin-bottom: 8rpx; }
 .goal-item { font-size: 26rpx; color: #636E72; line-height: 1.8; display: block; padding-left: 16rpx; font-weight: 500; }
-.scene-feedback { display: block; margin-top: 24rpx; font-size: 28rpx; color: #FF6B6B; font-weight: 600; text-align: center; padding: 20rpx; background: rgba(255,107,107,0.06); border-radius: 24rpx; }
+.scene-feedback-row { display: flex; align-items: flex-start; gap: 12rpx; margin-top: 24rpx; }
+.scene-feedback { display: block; flex: 1; font-size: 28rpx; color: #FF6B6B; font-weight: 600; text-align: center; padding: 20rpx; background: rgba(255,107,107,0.06); border-radius: 24rpx; }
 
 .action-buttons {
   display: flex;

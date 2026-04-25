@@ -27,6 +27,8 @@
         <chat-bubble
           role="{{item.role}}"
           content="{{item.content}}"
+          msgId="{{item.id || index}}"
+          bindcollect="onCollectMessage"
         />
       </block>
     </view>

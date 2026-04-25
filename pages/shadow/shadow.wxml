@@ -39,6 +39,7 @@
     <view class="sentence-card revealed">
       <text class="quote-mark left">"</text>
       <text class="sentence-text">{{currentSentence}}</text>
+      <view class="sentence-collect-btn" catchtap="collectSentence" data-text="{{currentSentence}}">☆</view>
       <text class="quote-mark right">"</text>
     </view>
     <view class="speaker-anim">
@@ -55,6 +56,7 @@
     <view class="sentence-card revealed">
       <text class="quote-mark left">"</text>
       <text class="sentence-text">{{currentSentence}}</text>
+      <view class="sentence-collect-btn" catchtap="collectSentence" data-text="{{currentSentence}}">☆</view>
       <text class="quote-mark right">"</text>
     </view>
     <view class="recording-section">
@@ -139,7 +141,7 @@
               <view class="play-btn-small {{playingTTSId === 'original-' + currentIndex ? 'playing' : ''}}" bindtap="playFeedbackTTS" data-text="{{currentSentence}}" data-type="original">
                 🔊
               </view>
-              <view class="play-btn-small" bindtap="collectSentence" data-text="{{currentSentence}}">
+              <view class="play-btn-small" catchtap="collectSentence" data-text="{{currentSentence}}">
                 ☆
               </view>
             </view>
@@ -147,9 +149,14 @@
           <text class="compare-text original">{{currentSentence}}</text>
         </view>
         <view class="compare-item">
-          <view class="compare-label">
-            <text class="compare-icon">🗣️</text>
-            <text>You Said</text>
+          <view class="compare-label-row">
+            <view class="compare-label">
+              <text class="compare-icon">🗣️</text>
+              <text>You Said</text>
+            </view>
+            <view class="play-btn-small" catchtap="collectSentence" data-text="{{userText}}" data-role="user">
+              ☆
+            </view>
           </view>
           <text class="compare-text spoken">{{userText}}</text>
         </view>
@@ -161,8 +168,13 @@
               <text class="compare-icon">💡</text>
               <text>Feedback</text>
             </view>
-            <view class="play-btn-small {{playingTTSId === 'feedback-' + currentIndex ? 'playing' : ''}}" bindtap="playFeedbackTTS" data-text="{{roundResults[roundResults.length - 1].feedback}}" data-type="feedback">
-              🔊
+            <view class="compare-actions">
+              <view class="play-btn-small {{playingTTSId === 'feedback-' + currentIndex ? 'playing' : ''}}" bindtap="playFeedbackTTS" data-text="{{roundResults[roundResults.length - 1].feedback}}" data-type="feedback">
+                🔊
+              </view>
+              <view class="play-btn-small" catchtap="collectSentence" data-text="{{roundResults[roundResults.length - 1].feedback}}">
+                ☆
+              </view>
             </view>
           </view>
           <text class="compare-text feedback-text">{{roundResults[roundResults.length - 1].feedback}}</text>
@@ -210,14 +222,20 @@
         <view class="result-header">
           <text class="result-round">Round {{index + 1}}</text>
           <view class="result-header-actions">
-            <view class="summary-collect-btn" bindtap="collectSentence" data-text="{{item.original}}">☆</view>
+            <view class="summary-collect-btn" catchtap="collectSentence" data-text="{{item.original}}">☆</view>
             <text class="result-score {{item.scoreClass}}">{{item.similarity}}%</text>
           </view>
         </view>
         <text class="result-original">{{item.original}}</text>
-        <text class="result-spoken">You: {{item.spoken}}</text>
+        <view class="result-spoken-row">
+          <text class="result-spoken">You: {{item.spoken}}</text>
+          <view class="summary-collect-btn" catchtap="collectSentence" data-text="{{item.spoken}}" data-role="user">☆</view>
+        </view>
         <view class="result-feedback-box" wx:if="{{item.feedback}}">
-          <text class="feedback-label">Feedback:</text>
+          <view class="feedback-label-row">
+            <text class="feedback-label">Feedback:</text>
+            <view class="summary-collect-btn" catchtap="collectSentence" data-text="{{item.feedback}}">☆</view>
+          </view>
           <text class="result-feedback">{{item.feedback}}</text>
         </view>
       </view>

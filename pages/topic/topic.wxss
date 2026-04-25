@@ -591,9 +591,49 @@
   flex: 1;
 }
 
+.collect-line,
+.inline-actions,
+.result-encouragement {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.collect-line {
+  justify-content: center;
+  width: 100%;
+}
+
+.collect-line .prep-topic-text {
+  flex: 1;
+}
+
+.inline-actions {
+  flex-shrink: 0;
+}
+
+.collect-icon-btn {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: #F8F9FA;
+  color: #FF9F43;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.collect-icon-btn:active {
+  transform: scale(0.9);
+}
+
 .result-encouragement {
   text-align: center;
   padding: 24rpx 0;
+  justify-content: center;
 }
 
 .encouragement-text {

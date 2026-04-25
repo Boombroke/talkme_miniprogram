@@ -75,7 +75,15 @@
   align-items: center;
   gap: 16rpx;
   margin-bottom: 20rpx;
+  justify-content: space-between;
+}
+
+.question-tags {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
   flex-wrap: wrap;
+  flex: 1;
 }
 
 .type-tag {
@@ -107,6 +115,46 @@
   font-weight: 700;
   color: #2D3436;
   line-height: 1.7;
+}
+
+.collect-line,
+.compare-value-row,
+.answer-val-row,
+.card-title-row,
+.summary-item-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+}
+
+.collect-line .question-sentence,
+.compare-value-row .compare-value,
+.answer-val-row .answer-val {
+  flex: 1;
+}
+
+.card-title-row,
+.summary-item-actions {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.collect-icon-btn {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: #F8F9FA;
+  color: #FF9F43;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.collect-icon-btn:active {
+  transform: scale(0.9);
 }
 
 /* 填空题：句子内嵌多个输入框 */

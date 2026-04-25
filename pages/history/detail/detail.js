@@ -1,4 +1,5 @@
 const api = require('../../../utils/api');
+const { collectText } = require('../../../utils/collection');
 const { formatDate, showToast } = require('../../../utils/util');
 
 Page({
@@ -36,5 +37,13 @@ Page({
       showToast('加载失败');
       this.setData({ isLoading: false });
     }
+  },
+
+  async onCollectMessage(e) {
+    const { content, role } = e.detail;
+    const source = this.data.conversation && this.data.conversation.mode === 'scene'
+      ? (this.data.conversation.sceneName || '情景实战')
+      : '历史对话';
+    await collectText(content, source, role);
   }
 });

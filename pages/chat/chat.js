@@ -1,5 +1,6 @@
 const api = require('../../utils/api');
 const auth = require('../../utils/auth');
+const { collectText } = require('../../utils/collection');
 const { createPracticeTimer } = require('../../utils/practice-timer');
 const { showToast, showModal, generateId } = require('../../utils/util');
 
@@ -535,23 +536,7 @@ Page({
 
   async onCollectMessage(e) {
     const { content, role } = e.detail;
-    if (!content) return;
-    if (auth.requireAuth('收藏句子') !== 'allowed') return;
-
-    try {
-      await api.callCloudFunction('login', {
-        action: 'addCollection',
-        content,
-        role,
-        source: this.data.mode === 'scene' ? this.data.sceneName : '自由对话'
-      }, {
-        showLoading: false
-      });
-      showToast('收藏成功 ⭐');
-    } catch (err) {
-      console.error('收藏失败:', err);
-      showToast('收藏失败');
-    }
+    await collectText(content, this.data.mode === 'scene' ? this.data.sceneName : '自由对话', role);
   },
 
   onRetryMessage(e) {

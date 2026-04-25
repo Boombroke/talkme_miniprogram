@@ -1,4 +1,5 @@
 const auth = require('../../../utils/auth');
+const { collectText } = require('../../../utils/collection');
 
 Page({
   data: {
@@ -103,5 +104,10 @@ Page({
     wx.navigateTo({
       url: `/pages/chat/chat?mode=scene&sceneId=${sceneId}&sceneName=${encodeURIComponent(sceneName)}`
     });
+  },
+
+  async collectSceneText(e) {
+    const source = this.data.sceneName ? `${this.data.sceneName}场景` : '场景详情';
+    await collectText(e.currentTarget.dataset.text, source);
   }
 });

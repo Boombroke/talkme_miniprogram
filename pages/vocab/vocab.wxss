@@ -302,6 +302,43 @@
   margin-bottom: 12rpx;
 }
 
+.section-title-row,
+.collect-row,
+.result-actions-inline,
+.result-feedback-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12rpx;
+}
+
+.section-title-row,
+.result-actions-inline {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.collect-row {
+  align-items: flex-start;
+}
+
+.collect-icon-btn {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 50%;
+  background: #F8F9FA;
+  color: #FF9F43;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.collect-icon-btn:active {
+  transform: scale(0.9);
+}
+
 .fb-sentence {
   font-size: 30rpx;
   color: #2D3436;
@@ -466,6 +503,10 @@
   line-height: 1.5;
   display: block;
   font-style: italic;
+}
+
+.result-feedback-row .result-fb {
+  flex: 1;
 }
 
 /* ========== Buttons ========== */

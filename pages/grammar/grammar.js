@@ -1,4 +1,5 @@
 const api = require('../../utils/api');
+const { collectText } = require('../../utils/collection');
 const { createPracticeTimer } = require('../../utils/practice-timer');
 const { showToast, shuffleCopy, avoidRecentFirst } = require('../../utils/util');
 
@@ -570,6 +571,10 @@ Page({
       return;
     }
     this._goNextQuestion();
+  },
+
+  async collectGrammarText(e) {
+    await collectText(e.currentTarget.dataset.text, '语法专练', e.currentTarget.dataset.role);
   },
 
   tryAgain() {

@@ -12,7 +12,10 @@
 
       <view class="topic-card shadow-card" wx:if="{{dailyTopic}}">
         <view class="topic-emoji">{{dailyTopic.emoji}}</view>
-        <text class="topic-en">{{dailyTopic.topic}}</text>
+        <view class="collect-line">
+          <text class="topic-en">{{dailyTopic.topic}}</text>
+          <view class="collect-icon-btn" data-text="{{dailyTopic.topic}}" catchtap="collectChallengeText">☆</view>
+        </view>
         <text class="topic-zh">{{dailyTopic.zh}}</text>
         <view class="topic-meta">
           <van-tag type="primary" round>{{dailyTopic.timeLimit}}秒</van-tag>
@@ -127,18 +130,27 @@
       </view>
 
       <view class="result-spoken" wx:if="{{evaluation.spokenText}}">
-        <text class="spoken-label">你说的内容：</text>
+        <view class="section-title-row">
+          <text class="spoken-label">你说的内容：</text>
+          <view class="collect-icon-btn" data-text="{{evaluation.spokenText}}" data-role="user" catchtap="collectChallengeText">☆</view>
+        </view>
         <text class="spoken-text">{{evaluation.spokenText}}</text>
       </view>
 
       <view class="result-feedback" wx:if="{{evaluation.feedback}}">
         <text class="feedback-text">💡 {{evaluation.feedback}}</text>
-        <view class="play-btn {{playingTextId === 'feedback' ? 'playing' : ''}}" data-text="{{evaluation.feedback}}" data-id="feedback" bindtap="playText">🔊</view>
+        <view class="inline-actions">
+          <view class="play-btn {{playingTextId === 'feedback' ? 'playing' : ''}}" data-text="{{evaluation.feedback}}" data-id="feedback" bindtap="playText">🔊</view>
+          <view class="collect-icon-btn" data-text="{{evaluation.feedback}}" catchtap="collectChallengeText">☆</view>
+        </view>
       </view>
 
       <view class="result-encouragement" wx:if="{{evaluation.encouragement}}">
         <text class="encouragement-text">{{evaluation.encouragement}}</text>
-        <view class="play-btn {{playingTextId === 'encouragement' ? 'playing' : ''}}" data-text="{{evaluation.encouragement}}" data-id="encouragement" bindtap="playText">🔊</view>
+        <view class="inline-actions">
+          <view class="play-btn {{playingTextId === 'encouragement' ? 'playing' : ''}}" data-text="{{evaluation.encouragement}}" data-id="encouragement" bindtap="playText">🔊</view>
+          <view class="collect-icon-btn" data-text="{{evaluation.encouragement}}" catchtap="collectChallengeText">☆</view>
+        </view>
       </view>
 
       <view class="result-actions">

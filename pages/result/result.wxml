@@ -106,7 +106,12 @@
           <text class="goal-label">❌ 未完成：</text>
           <text class="goal-item" wx:for="{{sceneCompletion.missedGoals}}" wx:key="index">{{item}}</text>
         </view>
-        <text class="scene-feedback" wx:if="{{sceneCompletion.feedback}}">{{sceneCompletion.feedback}}</text>
+        <view class="scene-feedback-row" wx:if="{{sceneCompletion.feedback}}">
+          <text class="scene-feedback">{{sceneCompletion.feedback}}</text>
+          <view class="collect-btn" data-text="{{sceneCompletion.feedback}}" bind:tap="collectFeedback">
+            <text class="collect-icon">☆</text>
+          </view>
+        </view>
       </view>
     </view>
   </view>

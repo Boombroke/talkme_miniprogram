@@ -1,4 +1,5 @@
 const api = require('../../utils/api');
+const { collectText } = require('../../utils/collection');
 const { createPracticeTimer } = require('../../utils/practice-timer');
 const { showToast, shuffleCopy, avoidRecentFirst } = require('../../utils/util');
 
@@ -150,6 +151,11 @@ Page({
       feedback: null,
       stage: 'card'
     });
+  },
+
+  async collectVocabText(e) {
+    const { text, role } = e.currentTarget.dataset;
+    await collectText(text, '词汇闪卡', role);
   },
 
   tryAgain() {

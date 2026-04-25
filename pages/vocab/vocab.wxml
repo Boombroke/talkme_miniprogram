@@ -31,7 +31,10 @@
           <text class="card-meaning">{{currentWord.meaning}}</text>
           <view class="card-example-wrap">
             <text class="card-example-label">Example</text>
-            <text class="card-example">{{currentWord.example}}</text>
+            <view class="collect-row">
+              <text class="card-example">{{currentWord.example}}</text>
+              <view class="collect-icon-btn" data-text="{{currentWord.example}}" catchtap="collectVocabText">☆</view>
+            </view>
           </view>
           <text class="card-tap-hint">Tap to flip back</text>
         </view>
@@ -102,7 +105,10 @@
     <!-- Your Sentence -->
     <view class="feedback-card">
       <view class="fb-section">
-        <text class="fb-label">Your Sentence</text>
+        <view class="section-title-row">
+          <text class="fb-label">Your Sentence</text>
+          <view class="collect-icon-btn" data-text="{{userSentence}}" data-role="user" catchtap="collectVocabText">☆</view>
+        </view>
         <text class="fb-sentence">{{userSentence}}</text>
       </view>
 
@@ -117,13 +123,19 @@
 
       <!-- Feedback Text -->
       <view class="fb-section" wx:if="{{feedback.feedback}}">
-        <text class="fb-label">Feedback</text>
+        <view class="section-title-row">
+          <text class="fb-label">Feedback</text>
+          <view class="collect-icon-btn" data-text="{{feedback.feedback}}" catchtap="collectVocabText">☆</view>
+        </view>
         <text class="fb-text">{{feedback.feedback}}</text>
       </view>
 
       <!-- Better Version -->
       <view class="fb-section" wx:if="{{feedback.betterVersion}}">
-        <text class="fb-label">Better Version</text>
+        <view class="section-title-row">
+          <text class="fb-label">Better Version</text>
+          <view class="collect-icon-btn" data-text="{{feedback.betterVersion}}" catchtap="collectVocabText">☆</view>
+        </view>
         <text class="fb-better">{{feedback.betterVersion}}</text>
       </view>
     </view>
@@ -162,12 +174,18 @@
       <view class="result-item" wx:for="{{results}}" wx:key="index">
         <view class="result-header">
           <text class="result-word">{{item.word.word}}</text>
-          <text class="result-verdict {{item.feedback.correct ? 'text-green' : 'text-red'}}">
-            {{item.feedback.correct ? '✅' : '❌'}}
-          </text>
+          <view class="result-actions-inline">
+            <view class="collect-icon-btn" data-text="{{item.userSentence}}" data-role="user" catchtap="collectVocabText">☆</view>
+            <text class="result-verdict {{item.feedback.correct ? 'text-green' : 'text-red'}}">
+              {{item.feedback.correct ? '✅' : '❌'}}
+            </text>
+          </view>
         </view>
         <text class="result-sentence">{{item.userSentence}}</text>
-        <text class="result-fb" wx:if="{{item.feedback.feedback}}">{{item.feedback.feedback}}</text>
+        <view class="result-feedback-row" wx:if="{{item.feedback.feedback}}">
+          <text class="result-fb">{{item.feedback.feedback}}</text>
+          <view class="collect-icon-btn" data-text="{{item.feedback.feedback}}" catchtap="collectVocabText">☆</view>
+        </view>
       </view>
     </view>
 

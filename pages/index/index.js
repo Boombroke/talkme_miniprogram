@@ -1,5 +1,6 @@
 const auth = require('../../utils/auth');
 const api = require('../../utils/api');
+const { collectText } = require('../../utils/collection');
 const { getStreakFlame } = require('../../utils/util');
 const { swr } = require('../../utils/swr');
 
@@ -208,5 +209,11 @@ Page({
 
   goToCheckin() {
     wx.switchTab({ url: '/pages/checkin/checkin' });
+  },
+
+  async collectDailySentence() {
+    const sentence = this.data.dailySentence;
+    if (!sentence || !sentence.en) return;
+    await collectText(sentence.en, '每日一句');
   }
 });
