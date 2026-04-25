@@ -1,4 +1,4 @@
-<view class="bubble-wrapper {{role === 'user' ? 'bubble-right' : 'bubble-left'}}" bindtap="closeMenu">
+<view class="bubble-wrapper {{role === 'user' ? 'bubble-right' : 'bubble-left'}}">
   <view class="chat-menu-mask" wx:if="{{showMenu}}" catchtap="closeMenu"></view>
   <!-- AI Avatar -->
   <view class="avatar ai-avatar" wx:if="{{role === 'assistant'}}">
@@ -19,7 +19,7 @@
         <view class="voice-bubble {{role === 'user' ? 'voice-bubble-user' : 'voice-bubble-ai'}} {{isVoicePlaying ? 'voice-bubble-playing' : ''}}"
               style="width: {{isTyping ? 180 : voiceWidth}}rpx;"
               bindtap="onTapVoice"
-              bindlongpress="onLongPress">
+              catchlongpress="onLongPress">
           <view class="typing-dots" wx:if="{{isTyping}}">
             <view class="typing-dot"></view>
             <view class="typing-dot"></view>
@@ -78,7 +78,7 @@
 
     <!-- TEXT MESSAGE BRANCH (original behavior) -->
     <block wx:else>
-      <view class="bubble {{role === 'user' ? 'bubble-user' : 'bubble-ai'}}" bindlongpress="onLongPress">
+      <view class="bubble {{role === 'user' ? 'bubble-user' : 'bubble-ai'}}" catchlongpress="onLongPress">
         <view class="typing-dots" wx:if="{{isTyping}}">
           <view class="typing-dot"></view>
           <view class="typing-dot"></view>
