@@ -118,6 +118,60 @@ function generateId() {
   return Date.now().toString(36) + Math.random().toString(36).substr(2, 9);
 }
 
+// Return a shuffled copy without mutating the original list.
+function shuffleCopy(list) {
+  const result = (list || []).slice();
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = result[i];
+    result[i] = result[j];
+    result[j] = temp;
+  }
+  return result;
+}
+
+function defaultItemKey(item) {
+  if (item == null) return '';
+  if (typeof item === 'string' || typeof item === 'number') return String(item);
+  if (item.id) return String(item.id);
+  if (item.word) return String(item.word);
+  if (item.sentence) return String(item.sentence);
+  return JSON.stringify(item);
+}
+
+// Keep a freshly shuffled session from starting with the same item as last time.
+function avoidRecentFirst(list, storageKey, keyGetter) {
+  const result = (list || []).slice();
+  if (result.length <= 1 || !storageKey) return result;
+
+  const getKey = typeof keyGetter === 'function' ? keyGetter : defaultItemKey;
+  let lastFirstKey = '';
+  try {
+    if (typeof wx !== 'undefined' && wx.getStorageSync) {
+      lastFirstKey = wx.getStorageSync(storageKey) || '';
+    }
+  } catch (e) { /* ignore */ }
+
+  if (lastFirstKey && getKey(result[0]) === lastFirstKey) {
+    const swapIndex = result.findIndex(function(item, index) {
+      return index > 0 && getKey(item) !== lastFirstKey;
+    });
+    if (swapIndex > 0) {
+      const temp = result[0];
+      result[0] = result[swapIndex];
+      result[swapIndex] = temp;
+    }
+  }
+
+  try {
+    if (typeof wx !== 'undefined' && wx.setStorageSync && result[0]) {
+      wx.setStorageSync(storageKey, getKey(result[0]));
+    }
+  } catch (e) { /* ignore */ }
+
+  return result;
+}
+
 // Get today's date string (YYYY-MM-DD)
 function getToday() {
   return formatDate(new Date(), 'YYYY-MM-DD');
@@ -165,6 +219,8 @@ module.exports = {
   showError,
   showModal,
   generateId,
+  shuffleCopy,
+  avoidRecentFirst,
   getToday,
   isSameDay,
   truncate,

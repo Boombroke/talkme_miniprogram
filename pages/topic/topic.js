@@ -1,6 +1,6 @@
 const api = require('../../utils/api');
 const { createPracticeTimer } = require('../../utils/practice-timer');
-const { showToast, generateId } = require('../../utils/util');
+const { showToast, generateId, shuffleCopy, avoidRecentFirst } = require('../../utils/util');
 
 Page({
   data: {
@@ -51,8 +51,11 @@ Page({
     else if (diff === 'advanced') filtered = allTopics.filter(function(t) { return ['intermediate', 'advanced'].indexOf(t.difficulty) !== -1; });
     else filtered = allTopics.filter(function(t) { return ['beginner', 'intermediate'].indexOf(t.difficulty) !== -1; });
     
-    // Shuffle and pick 4
-    var shuffled = filtered.sort(function() { return Math.random() - 0.5; }).slice(0, 4);
+    var shuffled = avoidRecentFirst(
+      shuffleCopy(filtered).slice(0, 4),
+      'topic_last_first_' + diff,
+      function(item) { return item.id; }
+    );
     this.setData({ topics: shuffled });
   },
 

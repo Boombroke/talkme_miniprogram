@@ -1,6 +1,6 @@
 const api = require('../../utils/api');
 const { createPracticeTimer } = require('../../utils/practice-timer');
-const { showToast } = require('../../utils/util');
+const { showToast, shuffleCopy, avoidRecentFirst } = require('../../utils/util');
 
 // 每档难度的语法点（模型从中随机挑一个考）
 const GRAMMAR_POINTS = {
@@ -299,42 +299,119 @@ Page({
   },
 
   _fallbackQuestion() {
-    // 最后兜底，按当前难度给一道不同难度的本地题
+    // 最后兜底，按当前难度从本地题库挑一道，避免网络失败时永远固定同一题。
     const map = {
-      beginner: {
-        type: 'fill-blank',
-        instruction: 'Fill in the blank with the correct form.',
-        sentence: 'My brother ___ (play) football every Saturday.',
-        answer: 'plays',
-        explanation: 'Simple present, 3rd person singular → verb + s.',
-        hint: 'Simple Present'
-      },
-      elementary: {
-        type: 'fill-blank',
-        instruction: 'Fill in the blank with the correct past form.',
-        sentence: 'We ___ (go) to the new cafe yesterday and ___ (try) their cheesecake.',
-        answer: 'went, tried',
-        explanation: 'Simple past: irregular go→went, regular try→tried.',
-        hint: 'Simple Past'
-      },
-      intermediate: {
-        type: 'error-correction',
-        instruction: 'Find and correct the grammar error in this sentence.',
-        sentence: 'If I would have known about the traffic, I will have left home earlier.',
-        answer: 'If I had known about the traffic, I would have left home earlier.',
-        explanation: 'Third conditional: if + past perfect, would have + past participle.',
-        hint: 'Third Conditional'
-      },
-      advanced: {
-        type: 'sentence-transformation',
-        instruction: 'Rewrite the sentence using inversion starting with "Not only".',
-        sentence: 'She not only missed the deadline but also blamed the team for it.',
-        answer: 'Not only did she miss the deadline but she also blamed the team for it.',
-        explanation: 'Negative-adverbial inversion: Not only + auxiliary + subject + bare verb.',
-        hint: 'Inversion'
-      }
+      beginner: [
+        {
+          type: 'fill-blank',
+          instruction: 'Fill in the blank with the correct form.',
+          sentence: 'My brother ___ (play) football every Saturday.',
+          answer: 'plays',
+          explanation: 'Simple present, 3rd person singular -> verb + s.',
+          hint: 'Simple Present'
+        },
+        {
+          type: 'fill-blank',
+          instruction: 'Choose a or an.',
+          sentence: 'She bought ___ umbrella before the rain started.',
+          answer: 'an',
+          explanation: 'Use "an" before a vowel sound.',
+          hint: 'Articles'
+        },
+        {
+          type: 'error-correction',
+          instruction: 'Find and correct the grammar error in this sentence.',
+          sentence: 'They is happy to meet their new teacher.',
+          answer: 'They are happy to meet their new teacher.',
+          explanation: 'The plural subject "they" takes "are".',
+          hint: 'Be-Verb Agreement'
+        }
+      ],
+      elementary: [
+        {
+          type: 'fill-blank',
+          instruction: 'Fill in the blank with the correct past form.',
+          sentence: 'We ___ (go) to the new cafe yesterday and ___ (try) their cheesecake.',
+          answer: 'went, tried',
+          explanation: 'Simple past: irregular go -> went, regular try -> tried.',
+          hint: 'Simple Past'
+        },
+        {
+          type: 'error-correction',
+          instruction: 'Find and correct the grammar error in this sentence.',
+          sentence: 'I have much friends in my English class.',
+          answer: 'I have many friends in my English class.',
+          explanation: 'Use "many" with countable plural nouns.',
+          hint: 'Countable Nouns'
+        },
+        {
+          type: 'sentence-transformation',
+          instruction: 'Rewrite the sentence using going to.',
+          sentence: 'She plans to visit her grandparents this weekend.',
+          answer: 'She is going to visit her grandparents this weekend.',
+          explanation: 'Use "be going to" for future plans.',
+          hint: 'Future Plans'
+        }
+      ],
+      intermediate: [
+        {
+          type: 'error-correction',
+          instruction: 'Find and correct the grammar error in this sentence.',
+          sentence: 'If I would have known about the traffic, I will have left home earlier.',
+          answer: 'If I had known about the traffic, I would have left home earlier.',
+          explanation: 'Third conditional: if + past perfect, would have + past participle.',
+          hint: 'Third Conditional'
+        },
+        {
+          type: 'fill-blank',
+          instruction: 'Fill in the blank with the best verb form.',
+          sentence: 'By the time the meeting started, the team ___ (already finish) the report.',
+          answer: 'had already finished',
+          explanation: 'Use past perfect for an action completed before another past event.',
+          hint: 'Past Perfect'
+        },
+        {
+          type: 'sentence-transformation',
+          instruction: 'Rewrite the sentence in the passive voice.',
+          sentence: 'The manager has approved the travel budget for next month.',
+          answer: 'The travel budget for next month has been approved by the manager.',
+          explanation: 'Present perfect passive uses has/have been + past participle.',
+          hint: 'Present Perfect Passive'
+        }
+      ],
+      advanced: [
+        {
+          type: 'sentence-transformation',
+          instruction: 'Rewrite the sentence using inversion starting with "Not only".',
+          sentence: 'She not only missed the deadline but also blamed the team for it.',
+          answer: 'Not only did she miss the deadline but she also blamed the team for it.',
+          explanation: 'Negative-adverbial inversion: Not only + auxiliary + subject + bare verb.',
+          hint: 'Inversion'
+        },
+        {
+          type: 'fill-blank',
+          instruction: 'Fill in the blank with a mixed conditional form.',
+          sentence: 'If the company ___ (invest) earlier, it would be leading the market now.',
+          answer: 'had invested',
+          explanation: 'A past unreal condition can explain a present unreal result.',
+          hint: 'Mixed Conditional'
+        },
+        {
+          type: 'error-correction',
+          instruction: 'Find and correct the grammar error in this sentence.',
+          sentence: 'Rarely the committee has faced a decision with such far-reaching consequences.',
+          answer: 'Rarely has the committee faced a decision with such far-reaching consequences.',
+          explanation: 'Negative adverbials like "Rarely" trigger subject-auxiliary inversion.',
+          hint: 'Negative Inversion'
+        }
+      ]
     };
-    return map[this.data.difficulty] || map.intermediate;
+    const candidates = map[this.data.difficulty] || map.intermediate;
+    return avoidRecentFirst(
+      shuffleCopy(candidates),
+      'grammar_fallback_last_first_' + this.data.difficulty,
+      function(item) { return item.sentence; }
+    )[0];
   },
 
   onInput(e) {

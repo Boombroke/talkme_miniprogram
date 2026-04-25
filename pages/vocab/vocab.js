@@ -1,6 +1,6 @@
 const api = require('../../utils/api');
 const { createPracticeTimer } = require('../../utils/practice-timer');
-const { showToast } = require('../../utils/util');
+const { showToast, shuffleCopy, avoidRecentFirst } = require('../../utils/util');
 
 Page({
   data: {
@@ -68,7 +68,12 @@ Page({
     if (diff === 'beginner' || diff === 'elementary') words = pool.beginner;
     else if (diff === 'advanced') words = pool.advanced;
 
-    const shuffled = words.sort(() => Math.random() - 0.5).slice(0, this.data.totalWords);
+    const storageKey = 'vocab_last_first_' + diff;
+    const shuffled = avoidRecentFirst(
+      shuffleCopy(words).slice(0, this.data.totalWords),
+      storageKey,
+      function(item) { return item.word; }
+    );
     this.setData({
       words: shuffled,
       currentWord: shuffled[0],
