@@ -1,3 +1,4 @@
+const api = require('../../utils/api');
 const { showToast } = require('../../utils/util');
 
 Page({
@@ -16,11 +17,8 @@ Page({
     this.setData({ isLoading: true });
     try {
       const mastered = this.data.filter === 'all' ? undefined : (this.data.filter === 'mastered');
-      const res = await wx.cloud.callFunction({
-        name: 'login',
-        data: { action: 'getCollections', mastered }
-      });
-      const collections = (res.result && res.result.collections) || [];
+      const res = await api.callCloudFunction('login', { action: 'getCollections', mastered }, { showLoading: false });
+      const collections = (res && res.collections) || [];
       this.setData({
         collections,
         isEmpty: collections.length === 0,
@@ -41,10 +39,7 @@ Page({
   async toggleMastered(e) {
     const { id, mastered } = e.currentTarget.dataset;
     try {
-      await wx.cloud.callFunction({
-        name: 'login',
-        data: { action: 'toggleMastered', id, mastered: !mastered }
-      });
+      await api.callCloudFunction('login', { action: 'toggleMastered', id, mastered: !mastered }, { showLoading: false });
       this.loadCollections();
     } catch (err) {
       showToast('操作失败');
@@ -54,10 +49,7 @@ Page({
   async deleteItem(e) {
     const { id } = e.currentTarget.dataset;
     try {
-      await wx.cloud.callFunction({
-        name: 'login',
-        data: { action: 'deleteCollection', id }
-      });
+      await api.callCloudFunction('login', { action: 'deleteCollection', id }, { showLoading: false });
       this.loadCollections();
       showToast('已删除');
     } catch (err) {

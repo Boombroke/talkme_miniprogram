@@ -539,14 +539,13 @@ Page({
     if (auth.requireAuth('收藏句子') !== 'allowed') return;
 
     try {
-      await wx.cloud.callFunction({
-        name: 'login',
-        data: {
-          action: 'addCollection',
-          content,
-          role,
-          source: this.data.mode === 'scene' ? this.data.sceneName : '自由对话'
-        }
+      await api.callCloudFunction('login', {
+        action: 'addCollection',
+        content,
+        role,
+        source: this.data.mode === 'scene' ? this.data.sceneName : '自由对话'
+      }, {
+        showLoading: false
       });
       showToast('收藏成功 ⭐');
     } catch (err) {

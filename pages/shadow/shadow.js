@@ -301,14 +301,13 @@ Page({
     if (auth.requireAuth('收藏句子') !== 'allowed') return;
 
     try {
-      await wx.cloud.callFunction({
-        name: 'login',
-        data: {
-          action: 'addCollection',
-          content,
-          role: 'assistant',
-          source: '影子跟读'
-        }
+      await api.callCloudFunction('login', {
+        action: 'addCollection',
+        content,
+        role: 'assistant',
+        source: '影子跟读'
+      }, {
+        showLoading: false
       });
       showToast('收藏成功');
     } catch (err) {
